@@ -15,16 +15,16 @@ export default function Home() {
 
         {/* Soft Cinematic Radial Vignette Framing the Event Horizon */}
         <div
-          className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center p-6"
+          className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center p-4 sm:p-6"
           style={{
             background:
               "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.92) 90%)",
           }}
         >
-          {/* Centered Typography Card (Silicon Valley High-Growth Vibe) */}
-          <div className="w-full max-w-4xl text-center pt-10 sm:pt-14 pointer-events-auto">
-            {/* Colossal Modern Headline H1 */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-[-0.03em] text-[#f2ede6] uppercase leading-[0.96] drop-shadow-2xl">
+          {/* Centered Typography Card (Ultra-Colossal Modern Scale) */}
+          <div className="w-full max-w-[1360px] text-center pt-14 sm:pt-20 px-3 sm:px-6 pointer-events-auto">
+            {/* Colossal Hero Title Card H1 */}
+            <h1 className="text-[clamp(2.85rem,8.4vw,8.5rem)] font-black tracking-[-0.04em] text-[#f2ede6] uppercase leading-[0.9] sm:leading-[0.88] drop-shadow-2xl">
               Scale at the
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#f2ede6] to-[#7ecba9]">
@@ -33,15 +33,15 @@ export default function Home() {
             </h1>
 
             {/* High-Impact Single-Line Proposition */}
-            <p className="mt-6 text-sm sm:text-base md:text-lg font-light leading-relaxed text-[#f2ede6]/85 max-w-2xl mx-auto">
+            <p className="mt-8 sm:mt-10 text-base sm:text-lg md:text-xl font-normal leading-relaxed text-[#f2ede6]/85 max-w-2xl mx-auto tracking-wide">
               Algorithmic media buying and viral social architecture built to dominate markets.
             </p>
 
             {/* Minimalist Magnetic Apple Pill Buttons */}
-            <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-4">
+            <div className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/#contact"
-                className="group inline-flex items-center gap-2 px-7 sm:px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase bg-[#f2ede6] text-[#0b0705] hover:bg-white hover:shadow-xl hover:shadow-[#57957E]/25 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                className="group inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase bg-[#f2ede6] text-[#0b0705] hover:bg-white hover:shadow-2xl hover:shadow-[#57957E]/30 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>Start Scaling</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -49,7 +49,7 @@ export default function Home() {
 
               <Link
                 href="/#services"
-                className="inline-flex items-center gap-2 px-7 sm:px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f2ede6] bg-white/[0.07] border border-white/20 hover:bg-white/15 hover:border-white/40 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#f2ede6] bg-white/[0.08] border border-white/25 hover:bg-white/20 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>Explore Services</span>
               </Link>
