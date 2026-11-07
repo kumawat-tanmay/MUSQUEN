@@ -13,58 +13,47 @@ export default function Home() {
         {/* 3D WebGL Background Canvas (Completely Fixed, Real-Time Moving Particles, No Ring) */}
         <HeroBlackHole />
 
-        {/* Soft Cinematic Radial Vignette (Matching Reference CodePen #start) */}
+        {/* Soft Cinematic Radial Vignette Framing the Event Horizon */}
         <div
           className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center p-6"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 52%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.68) 58%, rgba(0,0,0,0.92) 85%)",
+              "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.92) 90%)",
           }}
         >
-          {/* Centered Typography Card (Matching CodePen .card) */}
-          <div className="w-full max-w-[580px] text-center pt-8 sm:pt-12 pointer-events-auto">
-            {/* Headline H1 (Letter-spaced, Light, Warm Off-White #f2ede6) */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.22em] text-[#f2ede6] uppercase leading-[1.18] drop-shadow-md">
-              Universal Reach.
+          {/* Centered Typography Card (Silicon Valley High-Growth Vibe) */}
+          <div className="w-full max-w-4xl text-center pt-10 sm:pt-14 pointer-events-auto">
+            {/* Colossal Modern Headline H1 */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-[-0.03em] text-[#f2ede6] uppercase leading-[0.96] drop-shadow-2xl">
+              Scale at the
               <br />
-              <span className="font-normal text-[#f2ede6] tracking-[0.24em]">
-                Relentless Velocity.
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#f2ede6] to-[#7ecba9]">
+                Speed of Light.
               </span>
             </h1>
 
-            {/* Sub-tag (Mono, Letter-spaced, Dim Off-White) */}
-            <p className="mt-4 font-mono text-[11px] sm:text-xs tracking-[0.2em] text-[#f2ede6]/65 uppercase">
-              Omnipresent Digital Acceleration • Performance Media & Web
+            {/* High-Impact Single-Line Proposition */}
+            <p className="mt-6 text-sm sm:text-base md:text-lg font-light leading-relaxed text-[#f2ede6]/85 max-w-2xl mx-auto">
+              Algorithmic media buying and viral social architecture built to dominate markets.
             </p>
 
-            {/* Body Description */}
-            <p className="mt-6 text-sm sm:text-[15px] font-light leading-[1.72] text-[#f2ede6]/80 max-w-[490px] mx-auto">
-              From precision paid acquisition and viral social loops to bespoke 60fps web
-              engineering—we position your brand at the center of your industry&apos;s universe.
-            </p>
-
-            {/* Call To Action Buttons (Matching CodePen .btns .primary & outline) */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+            {/* Minimalist Magnetic Apple Pill Buttons */}
+            <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/#contact"
-                className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 rounded-full text-xs font-semibold tracking-[0.16em] uppercase bg-[#f2ede6] text-[#0b0705] hover:bg-white hover:shadow-lg hover:shadow-[#ffb36b]/15 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                className="group inline-flex items-center gap-2 px-7 sm:px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase bg-[#f2ede6] text-[#0b0705] hover:bg-white hover:shadow-xl hover:shadow-[#57957E]/25 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
-                <span>Book a Consultation</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <span>Start Scaling</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
 
               <Link
                 href="/#services"
-                className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 rounded-full text-xs font-semibold tracking-[0.16em] uppercase text-[#f2ede6] bg-transparent border border-[#f2ede6]/20 hover:bg-[#f2ede6]/[0.08] hover:border-[#f2ede6]/40 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                className="inline-flex items-center gap-2 px-7 sm:px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#f2ede6] bg-white/[0.07] border border-white/20 hover:bg-white/15 hover:border-white/40 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>Explore Services</span>
               </Link>
             </div>
-
-            {/* Micro Tagline */}
-            <p className="mt-6 font-mono text-[10px] text-[#f2ede6]/40 tracking-wider">
-              High-ROAS Meta Ads • Social Media Marketing • Next.js Web Development
-            </p>
           </div>
         </div>
       </section>
