@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Target, Megaphone, Laptop, CheckCircle2 } from "lucide-react";
 import HeroBlackHole from "@/components/hero/HeroBlackHole";
+import ProjectConveyor from "@/components/about/ProjectConveyor";
 
 export default function Home() {
   return (
@@ -58,23 +59,82 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section (Deep Obsidian Dark Luxury) */}
+      {/* About Section: Left Side Narrative & Right Side 3D Animated Conveyor Scroller */}
       <section
         id="about"
-        className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.08] w-full"
+        className="py-32 px-6 max-w-7xl mx-auto border-t border-white/[0.08] w-full"
       >
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
-            About Musquen Media
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black mt-3 text-[#f2ede6] tracking-tight">
-            Engineering Exponential Brand Velocity
-          </h2>
-          <p className="mt-6 text-zinc-400 leading-relaxed text-base sm:text-lg font-light">
-            We are a multidisciplinary team combining performance media buyers,
-            creative strategists, and creative technologists built to position your
-            brand at the apex of attention.
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+          {/* Left Column: Rich Agency Narrative Text */}
+          <div className="lg:col-span-5 flex flex-col justify-center">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
+              About Musquen Media
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black mt-3 text-[#f2ede6] tracking-tight leading-[1.08]">
+              Engineering Exponential Brand Velocity
+            </h2>
+            <p className="mt-6 text-zinc-400 leading-relaxed text-base font-light">
+              We are a multidisciplinary team combining performance media buyers,
+              creative strategists, and creative technologists built to position your
+              brand at the apex of industry attention.
+            </p>
+            <p className="mt-4 text-zinc-400 leading-relaxed text-sm font-light">
+              By fusing algorithmic paid acquisition, viral organic momentum, and bespoke 60 FPS
+              immersive digital engineering, we turn ambitious brands into category-defining leaders.
+            </p>
+
+            {/* Performance Metrics Stats Grid */}
+            <div className="grid grid-cols-2 gap-6 mt-8 pt-8 border-t border-white/[0.08]">
+              <div className="flex flex-col">
+                <span className="text-2xl sm:text-3xl font-black text-[#f2ede6] font-mono tracking-tight">
+                  $25M+
+                </span>
+                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
+                  Ad Spend Managed
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl sm:text-3xl font-black text-[var(--emerald-light)] font-mono tracking-tight">
+                  4.2x
+                </span>
+                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
+                  Average ROAS
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl sm:text-3xl font-black text-[#f2ede6] font-mono tracking-tight">
+                  60 FPS
+                </span>
+                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
+                  Bespoke Web Systems
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl sm:text-3xl font-black text-[var(--emerald-light)] font-mono tracking-tight">
+                  100%
+                </span>
+                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
+                  Dedicated Growth Leads
+                </span>
+              </div>
+            </div>
+
+            {/* Direct Consultation Link */}
+            <div className="mt-8">
+              <Link
+                href="/#contact"
+                className="group inline-flex items-center gap-2 text-xs font-bold tracking-[0.16em] uppercase text-[var(--emerald-light)] hover:text-white transition-colors"
+              >
+                <span>Partner With Our Team</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Column: Shakuro 3D WebGL Conveyor Scroller */}
+          <div className="lg:col-span-7 w-full">
+            <ProjectConveyor />
+          </div>
         </div>
       </section>
 
