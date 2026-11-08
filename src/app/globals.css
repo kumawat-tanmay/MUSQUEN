@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F9FAF7;
-  --foreground: #0D181A;
-  --offwhite: #F9FAF7;
-  --offwhite-card: #FFFFFF;
+  --background: #000000;
+  --foreground: #f2ede6;
+  --offwhite: #f2ede6;
+  --offwhite-card: rgba(255, 255, 255, 0.03);
   --emerald-brand: #57957E;
-  --emerald-light: #6DAE96;
+  --emerald-light: #7ECBA9;
   --emerald-dark: #3F6E5C;
-  --emerald-subtle: rgba(87, 149, 126, 0.12);
-  --emerald-glow: rgba(87, 149, 126, 0.25);
-  --border-subtle: rgba(13, 24, 26, 0.08);
+  --emerald-subtle: rgba(87, 149, 126, 0.15);
+  --emerald-glow: rgba(87, 149, 126, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
@@ -51,8 +51,8 @@ html.lenis body {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #000000;
+  color: #f2ede6;
   font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -60,112 +60,17 @@ body {
 
 /* Custom Utilities for Smooth Glass & Micro-Interactions */
 .glass-pill {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(87, 149, 126, 0.15);
-  box-shadow: 0 10px 30px -10px rgba(13, 24, 26, 0.06), 0 0 15px -3px rgba(87, 149, 126, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 .glass-dropdown {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(10, 14, 15, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(87, 149, 126, 0.2);
-  box-shadow: 0 20px 40px -15px rgba(13, 24, 26, 0.12), 0 0 25px -5px rgba(87, 149, 126, 0.15);
-}
-
-/* -------------------------------------------------------------------------- */
-/* CONIC GRADIENT BUTTON & DYNAMIC HUE-ROTATING TEXT                         */
-/* -------------------------------------------------------------------------- */
-.gradient-button {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 32px;
-  font-size: 16px;
-  font-weight: 700;
-  color: white;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  border-radius: 50px;
-  overflow: hidden;
-  isolation: isolate;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-
-.gradient-button:hover {
-  transform: scale(1.03);
-}
-
-.gradient-button::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    from 0deg,
-    #ff6b6b,
-    #4ecdc4,
-    #45b7d1,
-    #96ceb4,
-    #feca57,
-    #ff9ff3,
-    #ff6b6b
-  );
-  z-index: -2;
-  filter: blur(10px);
-  transform: rotate(0deg);
-  transition: transform 1.5s ease-in-out;
-}
-
-.gradient-button:hover::before {
-  transform: rotate(180deg);
-}
-
-.gradient-button::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  background: black;
-  border-radius: 47px;
-  z-index: -1;
-  filter: blur(5px);
-}
-
-.gradient-text {
-  color: transparent;
-  background: conic-gradient(
-    from 0deg,
-    #ff6b6b,
-    #4ecdc4,
-    #45b7d1,
-    #96ceb4,
-    #feca57,
-    #ff9ff3,
-    #ff6b6b
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: hue-rotate(0deg);
-}
-
-.gradient-button:hover .gradient-text {
-  animation: hue-rotating 2s linear infinite;
-}
-
-.gradient-button:active {
-  transform: scale(0.99);
-}
-
-@keyframes hue-rotating {
-  to {
-    filter: hue-rotate(360deg);
-  }
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
 }

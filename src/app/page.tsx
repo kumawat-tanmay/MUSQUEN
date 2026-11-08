@@ -4,7 +4,7 @@ import HeroBlackHole from "@/components/hero/HeroBlackHole";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--background)]">
+    <div className="flex flex-col min-h-screen bg-black text-[#f2ede6]">
       {/* Interactive Cinematic Black Hole Hero Section */}
       <section
         id="home"
@@ -37,21 +37,19 @@ export default function Home() {
               Algorithmic media buying and viral social architecture built to dominate markets.
             </p>
 
-            {/* CTA Buttons: Conic Gradient Glow Button & Glass Outline */}
+            {/* Minimalist Magnetic Apple Pill Buttons */}
             <div className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/#contact"
-                className="gradient-button group"
+                className="group inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase bg-[#f2ede6] text-[#0b0705] hover:bg-white hover:shadow-2xl hover:shadow-[#57957E]/30 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
-                <span className="gradient-text tracking-[0.14em] uppercase text-xs sm:text-sm font-bold">
-                  Start Scaling
-                </span>
-                <ArrowUpRight className="w-4 h-4 text-[#4ecdc4] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <span>Start Scaling</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
 
               <Link
                 href="/#services"
-                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#f2ede6] bg-white/[0.08] border border-white/25 hover:bg-white/20 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.99]"
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#f2ede6] bg-white/[0.08] border border-white/25 hover:bg-white/20 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>Explore Services</span>
               </Link>
@@ -60,35 +58,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section (Deep Obsidian Dark Luxury) */}
       <section
         id="about"
-        className="py-28 px-6 max-w-5xl mx-auto border-t border-[var(--border-subtle)] w-full"
+        className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.08] w-full"
       >
         <div className="text-center max-w-2xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-wider text-[var(--emerald-brand)]">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
             About Musquen Media
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 text-[var(--foreground)]">
+          <h2 className="text-3xl sm:text-5xl font-black mt-3 text-[#f2ede6] tracking-tight">
             Engineering Exponential Brand Velocity
           </h2>
-          <p className="mt-4 text-zinc-600 leading-relaxed text-sm sm:text-base">
+          <p className="mt-6 text-zinc-400 leading-relaxed text-base sm:text-lg font-light">
             We are a multidisciplinary team combining performance media buyers,
-            creative strategists, and creative technologists.
+            creative strategists, and creative technologists built to position your
+            brand at the apex of attention.
           </p>
         </div>
       </section>
 
-      {/* Services Showcase */}
+      {/* Services Showcase (Dark Glassmorphic Cards) */}
       <section
         id="services"
-        className="py-28 px-6 max-w-6xl mx-auto border-t border-[var(--border-subtle)] w-full"
+        className="py-32 px-6 max-w-6xl mx-auto border-t border-white/[0.08] w-full"
       >
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs font-bold uppercase tracking-wider text-[var(--emerald-brand)]">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
             Core Verticals
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 text-[var(--foreground)]">
+          <h2 className="text-3xl sm:text-5xl font-black mt-3 text-[#f2ede6] tracking-tight">
             Integrated Solutions Built for Scale
           </h2>
         </div>
@@ -97,13 +96,14 @@ export default function Home() {
           {/* Meta Ads Card */}
           <div
             id="services-meta-ads"
-            className="p-8 rounded-3xl bg-white border border-[var(--border-subtle)] shadow-sm hover:shadow-xl hover:border-[var(--emerald-brand)]/30 transition-all duration-300"
+            className="group relative p-8 sm:p-10 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-brand)] flex items-center justify-center mb-6">
-              <Target className="w-6 h-6" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[var(--emerald-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            <div className="relative z-10 w-14 h-14 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-6 border border-[var(--emerald-brand)]/30">
+              <Target className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold text-[var(--foreground)]">Meta Ads</h3>
-            <p className="mt-2 text-sm text-zinc-500 leading-relaxed">
+            <h3 className="relative z-10 text-xl font-bold text-[#f2ede6]">Meta Ads</h3>
+            <p className="relative z-10 mt-3 text-sm text-zinc-400 leading-relaxed font-light">
               Laser-focused audience targeting, creative testing engines, and attribution
               modeling to maximize ROAS.
             </p>
@@ -112,15 +112,16 @@ export default function Home() {
           {/* SMM Card */}
           <div
             id="services-smm"
-            className="p-8 rounded-3xl bg-white border border-[var(--border-subtle)] shadow-sm hover:shadow-xl hover:border-[var(--emerald-brand)]/30 transition-all duration-300"
+            className="group relative p-8 sm:p-10 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-brand)] flex items-center justify-center mb-6">
-              <Megaphone className="w-6 h-6" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[var(--emerald-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            <div className="relative z-10 w-14 h-14 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-6 border border-[var(--emerald-brand)]/30">
+              <Megaphone className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold text-[var(--foreground)]">
+            <h3 className="relative z-10 text-xl font-bold text-[#f2ede6]">
               Social Media Marketing
             </h3>
-            <p className="mt-2 text-sm text-zinc-500 leading-relaxed">
+            <p className="relative z-10 mt-3 text-sm text-zinc-400 leading-relaxed font-light">
               Viral short-form content, consistent community cultivation, and
               high-engagement social branding.
             </p>
@@ -129,15 +130,16 @@ export default function Home() {
           {/* Web Dev Card */}
           <div
             id="services-webdev"
-            className="p-8 rounded-3xl bg-white border border-[var(--border-subtle)] shadow-sm hover:shadow-xl hover:border-[var(--emerald-brand)]/30 transition-all duration-300"
+            className="group relative p-8 sm:p-10 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-brand)] flex items-center justify-center mb-6">
-              <Laptop className="w-6 h-6" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[var(--emerald-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            <div className="relative z-10 w-14 h-14 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-6 border border-[var(--emerald-brand)]/30">
+              <Laptop className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold text-[var(--foreground)]">
+            <h3 className="relative z-10 text-xl font-bold text-[#f2ede6]">
               Website Development
             </h3>
-            <p className="mt-2 text-sm text-zinc-500 leading-relaxed">
+            <p className="relative z-10 mt-3 text-sm text-zinc-400 leading-relaxed font-light">
               Ultra-fast Next.js architecture, Lenis smooth scrolling, WebGL interactive
               micro-interactions, and conversion-optimized flow.
             </p>
@@ -145,16 +147,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
+      {/* Why Choose Us Section (Obsidian Glass Tiles) */}
       <section
         id="why-choose-us"
-        className="py-28 px-6 max-w-5xl mx-auto border-t border-[var(--border-subtle)] w-full"
+        className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.08] w-full"
       >
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-[var(--emerald-brand)]">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
             Our Advantage
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 text-[var(--foreground)]">
+          <h2 className="text-3xl sm:text-5xl font-black mt-3 text-[#f2ede6] tracking-tight">
             Why Partner With Musquen Media
           </h2>
         </div>
@@ -168,30 +170,42 @@ export default function Home() {
           ].map((item) => (
             <div
               key={item}
-              className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-[var(--border-subtle)]"
+              className="flex items-center gap-4 p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all duration-200"
             >
-              <CheckCircle2 className="w-5 h-5 text-[var(--emerald-brand)] shrink-0" />
-              <span className="text-sm font-semibold text-zinc-800">{item}</span>
+              <CheckCircle2 className="w-5 h-5 text-[var(--emerald-light)] shrink-0" />
+              <span className="text-sm font-semibold text-[#f2ede6]">{item}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section (Cinematic Dark Glow & Direct CTA) */}
       <section
         id="contact"
-        className="py-28 px-6 max-w-3xl mx-auto border-t border-[var(--border-subtle)] w-full text-center mb-20"
+        className="relative py-36 px-6 max-w-4xl mx-auto border-t border-white/[0.08] w-full text-center overflow-hidden"
       >
-        <span className="text-xs font-bold uppercase tracking-wider text-[var(--emerald-brand)]">
+        <div className="absolute inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_center,rgba(87,149,126,0.15)_0%,transparent_70%)]" />
+
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
           Ready to Accelerate?
         </span>
-        <h2 className="text-3xl sm:text-5xl font-extrabold mt-2 text-[var(--foreground)]">
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mt-3 text-[#f2ede6] tracking-tight">
           Let&apos;s Build Something Extraordinary.
         </h2>
-        <p className="mt-4 text-zinc-500 text-sm sm:text-base">
-          Scroll back up or explore the navbar to experience the smooth Lenis scroller
-          and relativistic black hole simulation.
+        <p className="mt-6 text-zinc-400 text-base sm:text-lg max-w-xl mx-auto font-light leading-relaxed">
+          Partner with our growth and engineering teams to transform your digital presence
+          and command your industry.
         </p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            href="mailto:contact@musquen.media"
+            className="group inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase bg-[var(--emerald-brand)] text-white hover:bg-[var(--emerald-dark)] shadow-xl shadow-[var(--emerald-brand)]/25 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <span>Initiate Consultation</span>
+            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
+        </div>
       </section>
     </div>
   );
