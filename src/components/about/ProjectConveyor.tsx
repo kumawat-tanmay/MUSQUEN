@@ -648,18 +648,11 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
       container.addEventListener("pointercancel", onPointerUp);
       container.addEventListener("click", onClick);
 
-      // Viewport Intersection Observer (0% idle GPU when off-screen)
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            inView = entry.isIntersecting;
-            // Extra Rule: set pointer-events to auto only while in viewport
-            canvas.style.pointerEvents = inView ? "auto" : "none";
-          });
-        },
-        { threshold: 0.05 }
-      );
-      observer.observe(container);
+      // Tab Visibility (Pause rendering when tab is hidden, 0% idle GPU)
+      const handleVisibilityChange = () => {
+        inView = !document.hidden;
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
 
       const render = (time: number) => {
         animId = requestAnimationFrame(render);
@@ -694,7 +687,7 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
       return () => {
         cancelAnimationFrame(animId);
         window.removeEventListener("resize", handleResize);
-        observer.disconnect();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
 
         canvas.removeEventListener("webglcontextlost", handleContextLost);
         canvas.removeEventListener("webglcontextrestored", handleContextRestored);

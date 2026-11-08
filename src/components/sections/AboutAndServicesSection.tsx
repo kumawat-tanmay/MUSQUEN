@@ -97,7 +97,7 @@ export default function AboutAndServicesSection() {
       const easeFunc = gsap.parseEase(TRANSITION_EASE);
 
       // ---------------------------------------------------------------------
-      // Rect Caching: Run on init and every ScrollTrigger.refresh()
+      // Rect Caching: Run on init, refresh, and font load
       // ---------------------------------------------------------------------
       const cacheRects = () => {
         const scrollY = window.scrollY || window.pageYOffset;
@@ -105,39 +105,53 @@ export default function AboutAndServicesSection() {
         const endR = endSlot.getBoundingClientRect();
         const stageR = stageWrapper.getBoundingClientRect();
 
+        const width = startR.width > 0 ? startR.width : 520;
+        const height = startR.height > 0 ? startR.height : 640;
+        const endWidth = endR.width > 0 ? endR.width : 1360;
+        const endHeight = endR.height > 0 ? endR.height : 680;
+
         // 1. Document coordinates of startSlot in About
         startDocRect.current = {
-          width: startR.width,
-          height: startR.height,
-          centerX: startR.left + startR.width / 2,
-          centerY: startR.top + scrollY + startR.height / 2,
+          width,
+          height,
+          centerX: (startR.width > 0 ? startR.left : window.innerWidth * 0.65) + width / 2,
+          centerY: (startR.height > 0 ? startR.top : window.innerHeight * 0.45) + scrollY + height / 2,
         };
 
         // 2. Viewport coordinates of endSlot when stageWrapper top is at 0
         endPinnedViewportRect.current = {
-          width: endR.width,
-          height: endR.height,
-          centerX: endR.left + endR.width / 2,
-          centerY: endR.top - stageR.top + endR.height / 2,
+          width: endWidth,
+          height: endHeight,
+          centerX: (endR.width > 0 ? endR.left : (window.innerWidth - endWidth) / 2) + endWidth / 2,
+          centerY: (endR.height > 0 ? endR.top - stageR.top : (window.innerHeight - endHeight) / 2) + endHeight / 2,
         };
 
         // Size the base layer to match startSlot base size
         if (scrollerLayer) {
-          scrollerLayer.style.width = `${startR.width}px`;
-          scrollerLayer.style.height = `${startR.height}px`;
+          scrollerLayer.style.width = `${width}px`;
+          scrollerLayer.style.height = `${height}px`;
+          scrollerLayer.style.opacity = "1";
         }
 
-        conveyor?.resize(startR.width, startR.height);
+        conveyor?.resize(width, height);
       };
 
       cacheRects();
+      updateScrollerTransform();
       ScrollTrigger.addEventListener("refresh", cacheRects);
+
+      if (typeof document !== "undefined" && document.fonts) {
+        document.fonts.ready.then(() => {
+          cacheRects();
+          updateScrollerTransform();
+        });
+      }
 
       // ---------------------------------------------------------------------
       // Update Scroller Transform (Translate3d + Scale ONLY, 60 FPS)
       // ---------------------------------------------------------------------
-      const updateScrollerTransform = () => {
-        if (!scrollerLayer) return;
+      function updateScrollerTransform() {
+        if (!scrollerLayer || !startSlot) return;
 
         const currentScrollY = window.scrollY || window.pageYOffset;
 
@@ -195,13 +209,8 @@ export default function AboutAndServicesSection() {
         // Update presentation tilt uniform (0 to 1)
         conveyor?.setPresent(lerp(TILT_ANGLES.present0, TILT_ANGLES.present1, easeP));
 
-        // Visibility & GPU boundary optimization
-        const isOffscreen =
-          curCenterY + (startDocRect.current.height * curScaleY) / 2 < -200 ||
-          curCenterY - (startDocRect.current.height * curScaleY) / 2 >
-            window.innerHeight + 200;
-
-        scrollerLayer.style.opacity = isOffscreen ? "0" : "1";
+        // Always visible - zero random disappearance
+        scrollerLayer.style.opacity = "1";
         scrollerLayer.style.willChange =
           travelProgressRef.current > 0.01 && travelProgressRef.current < 0.99
             ? "transform"
@@ -317,7 +326,7 @@ export default function AboutAndServicesSection() {
         style={{
           width: "520px",
           height: "640px",
-          transform: "translate3d(-9999px, -9999px, 0)",
+          opacity: 1,
         }}
       >
         <ProjectConveyor ref={conveyorRef} initialPresent={0} />
