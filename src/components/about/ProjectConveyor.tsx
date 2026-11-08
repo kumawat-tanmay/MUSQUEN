@@ -14,7 +14,7 @@ const defaultProjects: Project[] = [
   {
     order: 3,
     id: "25156786",
-    title: "Monarch",
+    title: "Monarch Meta Ads",
     url: "https://dribbble.com/shots/25156786",
     image:
       "https://cdn.dribbble.com/userupload/17469058/file/original-3281c9a5cba68bd522aaa911e9848297.png?format=webp&resize=1200x900",
@@ -22,7 +22,7 @@ const defaultProjects: Project[] = [
   {
     order: 5,
     id: "27274598",
-    title: "Spektral",
+    title: "Spektral 60FPS Web System",
     url: "https://dribbble.com/shots/27274598",
     image:
       "https://cdn.dribbble.com/userupload/47373040/file/457ad343977ccf420ab30658f9b71531.png?format=webp&resize=1200x900",
@@ -30,7 +30,7 @@ const defaultProjects: Project[] = [
   {
     order: 9,
     id: "27340771",
-    title: "Owari",
+    title: "Owari Viral SMM Loops",
     url: "https://dribbble.com/shots/27340771",
     image:
       "https://cdn.dribbble.com/userupload/47603638/file/7c3cd868135a7ddc2c38e06d1194f78b.png?format=webp&resize=1200x900",
@@ -38,7 +38,7 @@ const defaultProjects: Project[] = [
   {
     order: 11,
     id: "27601386",
-    title: "Trading Dashboard",
+    title: "High-Frequency Analytics Dashboard",
     url: "https://dribbble.com/shots/27601386-Trading-Dashboard-for-Market-Data-Analysis-and-Execution",
     image:
       "https://cdn.dribbble.com/userupload/48539267/file/a2b4e384fbb94b1f96dc7a19ae138092.png?format=webp&resize=1200x900",
@@ -46,7 +46,7 @@ const defaultProjects: Project[] = [
   {
     order: 12,
     id: "25900599",
-    title: "Crypto Exchange",
+    title: "Crypto High-Conversion Platform",
     url: "https://dribbble.com/shots/25900599-Crypto-Exchange-Web-Platform",
     image:
       "https://cdn.dribbble.com/userupload/42920999/file/original-93660321e8852132642b3824614bc32f.png?format=webp&resize=1200x900",
@@ -54,7 +54,7 @@ const defaultProjects: Project[] = [
   {
     order: 17,
     id: "26530423",
-    title: "TraderTale",
+    title: "TraderTale Community Architecture",
     url: "https://dribbble.com/shots/26530423-UI-UX-Design-for-TraderTale-Social-Platform-for-Traders",
     image:
       "https://cdn.dribbble.com/userupload/44924480/file/still-439f1b3427d2c6053c9bbfdc5debdbb2.png?format=webp&resize=1200x900",
@@ -62,7 +62,7 @@ const defaultProjects: Project[] = [
   {
     order: 19,
     id: "26249804",
-    title: "AJP",
+    title: "AJP Event Scaled Platform",
     url: "https://dribbble.com/shots/26249804-Website-Design-for-AJP-Jiu-Jitsu-Tournament-Platform",
     image:
       "https://cdn.dribbble.com/userupload/44022519/file/still-91d6c4bfcf4accc97a75553bafe66b23.png?format=webp&resize=1200x900",
@@ -70,7 +70,7 @@ const defaultProjects: Project[] = [
   {
     order: 20,
     id: "25764275",
-    title: "Developer Community",
+    title: "Developer Community Social Loop",
     url: "https://dribbble.com/shots/25764275-Social-Media-Platform-for-Developers",
     image:
       "https://cdn.dribbble.com/userupload/41572827/file/original-ca56285eb604f6a12fe3e3c0e020bbd6.png?format=webp&resize=1200x900",
@@ -395,10 +395,10 @@ function createConveyor(
           height
         );
       } else {
-        ctx.fillStyle = "#1e292b";
+        ctx.fillStyle = "#162022";
         ctx.fillRect(x + 10, y + 10, tileWidth - 20, tileHeight - 20);
         ctx.fillStyle = "#7ECBA9";
-        ctx.font = `bold ${tileWidth / 22}px sans-serif`;
+        ctx.font = `bold ${tileWidth / 20}px sans-serif`;
         ctx.fillText(projects[index].title, x + 30, y + tileHeight / 2);
       }
     });
@@ -544,10 +544,25 @@ function createConveyor(
   };
 }
 
-export default function ProjectConveyor() {
+export interface ProjectConveyorProps {
+  presentProgress?: number;
+  className?: string;
+  heightClass?: string;
+}
+
+export default function ProjectConveyor({
+  presentProgress = 0,
+  className = "",
+  heightClass = "h-[540px] sm:h-[640px] lg:h-[700px]",
+}: ProjectConveyorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeTitle, setActiveTitle] = useState<string>("");
+  const targetPresentRef = useRef(presentProgress);
+
+  useEffect(() => {
+    targetPresentRef.current = Math.max(0, Math.min(1, presentProgress));
+  }, [presentProgress]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -563,7 +578,7 @@ export default function ProjectConveyor() {
       offset: 0,
       velocity: 0.008, // Subtle resting drift keeps the conveyor alive
       present: 0,
-      targetPresent: 0,
+      targetPresent: targetPresentRef.current,
       pointerX: 0,
       pointerY: 0,
       parallaxX: 0,
@@ -603,6 +618,11 @@ export default function ProjectConveyor() {
     };
 
     window.addEventListener("resize", handleResize);
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+    resizeObserver.observe(container);
 
     // Pointer Dragging and Hover Interactions
     let touch: {
@@ -670,7 +690,6 @@ export default function ProjectConveyor() {
     };
 
     const onWheel = (e: WheelEvent) => {
-      // Localized wheel scroll - spins the belt without hijacking the full page Lenis scroll unless fast
       motion.velocity += e.deltaY * 0.0003;
     };
 
@@ -701,6 +720,9 @@ export default function ProjectConveyor() {
         : 1;
       prevTime = time;
 
+      // Sync targetPresent from prop dynamically
+      motion.targetPresent = targetPresentRef.current;
+
       // Small baseline momentum if idle
       if (Math.abs(motion.velocity) < 0.001 && !touch) {
         motion.velocity = 0.004;
@@ -715,6 +737,7 @@ export default function ProjectConveyor() {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
       observer.disconnect();
 
       container.removeEventListener("pointerdown", onPointerDown);
@@ -731,7 +754,7 @@ export default function ProjectConveyor() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[520px] sm:h-[620px] lg:h-[680px] rounded-3xl overflow-hidden bg-transparent border-0 border-none touch-none select-none group"
+      className={`relative w-full ${heightClass} rounded-3xl overflow-hidden bg-transparent border-0 border-none touch-none select-none group ${className}`}
     >
       <canvas
         ref={canvasRef}
@@ -755,7 +778,7 @@ export default function ProjectConveyor() {
 
       {/* Active Project Title Pill On Hover */}
       {activeTitle && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none px-4 py-2 rounded-full bg-[#f2ede6] text-[#0b0705] font-semibold text-xs tracking-wider uppercase shadow-xl animate-fade-in">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none px-4 py-2 rounded-full bg-[#f2ede6] text-[#0b0705] font-semibold text-xs tracking-wider uppercase shadow-xl animate-fade-in whitespace-nowrap">
           <span>{activeTitle}</span>
           <span className="ml-1.5 text-[10px] opacity-60">↗</span>
         </div>
@@ -770,4 +793,3 @@ export default function ProjectConveyor() {
     </div>
   );
 }
-
