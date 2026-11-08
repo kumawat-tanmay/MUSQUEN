@@ -731,7 +731,7 @@ export default function ProjectConveyor() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[520px] sm:h-[620px] lg:h-[680px] rounded-3xl overflow-hidden bg-gradient-to-b from-white/[0.04] to-black/60 border border-white/[0.08] shadow-2xl touch-none select-none group"
+      className="relative w-full h-[520px] sm:h-[620px] lg:h-[680px] rounded-3xl overflow-hidden bg-transparent border-0 border-none touch-none select-none group"
     >
       <canvas
         ref={canvasRef}
@@ -770,3 +770,4 @@ export default function ProjectConveyor() {
     </div>
   );
 }
+

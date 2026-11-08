@@ -1,7 +1,34 @@
 import Link from "next/link";
-import { ArrowUpRight, Target, Megaphone, Laptop, CheckCircle2 } from "lucide-react";
+import {
+  ArrowUpRight,
+  Target,
+  Megaphone,
+  Laptop,
+  CheckCircle2,
+  Mail,
+  PhoneCall,
+  MessageCircle,
+} from "lucide-react";
 import HeroBlackHole from "@/components/hero/HeroBlackHole";
 import ProjectConveyor from "@/components/about/ProjectConveyor";
+
+function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
@@ -59,14 +86,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section: Left Side Narrative & Right Side 3D Animated Conveyor Scroller */}
+      {/* About Section: 50 / 50 Split Layout with Real Contact Details & Borderless 3D Conveyor */}
       <section
         id="about"
         className="py-32 px-6 max-w-7xl mx-auto border-t border-white/[0.08] w-full"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
-          {/* Left Column: Rich Agency Narrative Text */}
-          <div className="lg:col-span-5 flex flex-col justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Column (50%): Real Musquen Media Manifesto & Animated Contact Hubs */}
+          <div className="flex flex-col justify-center">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
               About Musquen Media
             </span>
@@ -74,65 +101,87 @@ export default function Home() {
               Engineering Exponential Brand Velocity
             </h2>
             <p className="mt-6 text-zinc-400 leading-relaxed text-base font-light">
-              We are a multidisciplinary team combining performance media buyers,
-              creative strategists, and creative technologists built to position your
-              brand at the apex of industry attention.
-            </p>
-            <p className="mt-4 text-zinc-400 leading-relaxed text-sm font-light">
-              By fusing algorithmic paid acquisition, viral organic momentum, and bespoke 60 FPS
-              immersive digital engineering, we turn ambitious brands into category-defining leaders.
+              We combine precision performance media buying, viral social loops, and bespoke 60 FPS
+              immersive web architectures to position your brand at the center of industry gravity.
             </p>
 
-            {/* Performance Metrics Stats Grid */}
-            <div className="grid grid-cols-2 gap-6 mt-8 pt-8 border-t border-white/[0.08]">
-              <div className="flex flex-col">
-                <span className="text-2xl sm:text-3xl font-black text-[#f2ede6] font-mono tracking-tight">
-                  $25M+
-                </span>
-                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
-                  Ad Spend Managed
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-2xl sm:text-3xl font-black text-[var(--emerald-light)] font-mono tracking-tight">
-                  4.2x
-                </span>
-                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
-                  Average ROAS
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-2xl sm:text-3xl font-black text-[#f2ede6] font-mono tracking-tight">
-                  60 FPS
-                </span>
-                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
-                  Bespoke Web Systems
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-2xl sm:text-3xl font-black text-[var(--emerald-light)] font-mono tracking-tight">
-                  100%
-                </span>
-                <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider mt-1">
-                  Dedicated Growth Leads
-                </span>
-              </div>
-            </div>
-
-            {/* Direct Consultation Link */}
-            <div className="mt-8">
-              <Link
-                href="/#contact"
-                className="group inline-flex items-center gap-2 text-xs font-bold tracking-[0.16em] uppercase text-[var(--emerald-light)] hover:text-white transition-colors"
+            {/* Real Interactive Contact Hub with Animated Icons */}
+            <div className="flex flex-col gap-3.5 mt-8 pt-8 border-t border-white/[0.08]">
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/musqenmedia/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#E1306C]/50 hover:bg-white/[0.06] transition-all duration-300"
               >
-                <span>Partner With Our Team</span>
-                <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-[#E1306C]/10 text-[#E1306C] flex items-center justify-center border border-[#E1306C]/20 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-sm">
+                    <InstagramIcon className="w-5 h-5 animate-pulse" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">Instagram</span>
+                    <span className="text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors">@musqenmedia</span>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Direct Email */}
+              <a
+                href="mailto:musqenmedia@gmail.com"
+                className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.06] transition-all duration-300"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center border border-[var(--emerald-brand)]/20 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300 shadow-sm">
+                    <Mail className="w-5 h-5 animate-bounce" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">Direct Email</span>
+                    <span className="text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors">musqenmedia@gmail.com</span>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+
+              {/* Phone & WhatsApp Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <a
+                  href="tel:+919079454032"
+                  className="group flex items-center gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-emerald-500/50 hover:bg-white/[0.06] transition-all duration-300"
+                >
+                  <div className="relative w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                    </span>
+                    <PhoneCall className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">Direct Call</span>
+                    <span className="text-sm font-bold text-[#f2ede6]">+91 90794 54032</span>
+                  </div>
+                </a>
+
+                <a
+                  href="https://wa.me/919079454032"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-emerald-500/50 hover:bg-white/[0.06] transition-all duration-300"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">WhatsApp</span>
+                    <span className="text-sm font-bold text-[#f2ede6]">Chat on WhatsApp</span>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Shakuro 3D WebGL Conveyor Scroller */}
-          <div className="lg:col-span-7 w-full">
+          {/* Right Column (50%): 100% Borderless Shakuro 3D WebGL Conveyor */}
+          <div className="w-full flex items-center justify-center">
             <ProjectConveyor />
           </div>
         </div>
@@ -239,7 +288,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Section (Cinematic Dark Glow & Direct CTA) */}
+      {/* Contact Section (Cinematic Dark Glow & Direct Contact Hub) */}
       <section
         id="contact"
         className="relative py-36 px-6 max-w-4xl mx-auto border-t border-white/[0.08] w-full text-center overflow-hidden"
@@ -253,18 +302,28 @@ export default function Home() {
           Let&apos;s Build Something Extraordinary.
         </h2>
         <p className="mt-6 text-zinc-400 text-base sm:text-lg max-w-xl mx-auto font-light leading-relaxed">
-          Partner with our growth and engineering teams to transform your digital presence
-          and command your industry.
+          Reach out directly to partner with our growth, media, and web engineering teams.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <Link
-            href="mailto:contact@musquen.media"
+          <a
+            href="mailto:musqenmedia@gmail.com"
             className="group inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase bg-[var(--emerald-brand)] text-white hover:bg-[var(--emerald-dark)] shadow-xl shadow-[var(--emerald-brand)]/25 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
           >
-            <span>Initiate Consultation</span>
+            <Mail className="w-4 h-4" />
+            <span>musqenmedia@gmail.com</span>
             <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
+          </a>
+
+          <a
+            href="https://wa.me/919079454032"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#f2ede6] bg-white/[0.08] border border-white/25 hover:bg-white/20 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <MessageCircle className="w-4 h-4 text-emerald-400" />
+            <span>WhatsApp: +91 90794 54032</span>
+          </a>
         </div>
       </section>
     </div>
