@@ -105,78 +105,99 @@ export default function Home() {
               immersive web architectures to position your brand at the center of industry gravity.
             </p>
 
-            {/* Real Interactive Contact Hub with Animated Icons */}
-            <div className="flex flex-col gap-3.5 mt-8 pt-8 border-t border-white/[0.08]">
-              {/* Instagram */}
+            {/* Real Interactive Contact Hub: Exactly 2 Lines (2x2 Grid) with Official Brand Colors */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-8 pt-8 border-t border-white/[0.08]">
+              {/* Line 1 - Card 1: Official Instagram Brand Gradient */}
               <a
                 href="https://www.instagram.com/musqenmedia/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#E1306C]/50 hover:bg-white/[0.06] transition-all duration-300"
+                className="group flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#dc2743]/60 hover:bg-white/[0.06] transition-all duration-300"
               >
-                <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-[#E1306C]/10 text-[#E1306C] flex items-center justify-center border border-[#E1306C]/20 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-sm">
-                    <InstagramIcon className="w-5 h-5 animate-pulse" />
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#dc2743]/25 group-hover:scale-105 group-hover:rotate-6 transition-transform duration-300">
+                    <InstagramIcon className="w-5 h-5" />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">Instagram</span>
-                    <span className="text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors">@musqenmedia</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[10px] sm:text-[11px] text-zinc-400 font-mono uppercase tracking-wider">
+                      Instagram
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors truncate">
+                      @musqenmedia
+                    </span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
               </a>
 
-              {/* Direct Email */}
+              {/* Line 1 - Card 2: Official Direct Email (Gmail Red) */}
               <a
                 href="mailto:musqenmedia@gmail.com"
-                className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.06] transition-all duration-300"
+                className="group flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#EA4335]/60 hover:bg-white/[0.06] transition-all duration-300"
               >
-                <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center border border-[var(--emerald-brand)]/20 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300 shadow-sm">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#EA4335]/15 text-[#EA4335] border border-[#EA4335]/30 flex items-center justify-center shrink-0 shadow-md shadow-[#EA4335]/20 group-hover:scale-105 group-hover:-rotate-6 transition-transform duration-300">
                     <Mail className="w-5 h-5 animate-bounce" />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">Direct Email</span>
-                    <span className="text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors">musqenmedia@gmail.com</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[10px] sm:text-[11px] text-zinc-400 font-mono uppercase tracking-wider">
+                      Direct Email
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors truncate">
+                      musqenmedia@gmail.com
+                    </span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
               </a>
 
-              {/* Phone & WhatsApp Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                <a
-                  href="tel:+919079454032"
-                  className="group flex items-center gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-emerald-500/50 hover:bg-white/[0.06] transition-all duration-300"
-                >
-                  <div className="relative w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform duration-300">
+              {/* Line 2 - Card 3: Official Direct Call */}
+              <a
+                href="tel:+919079454032"
+                className="group flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#22C55E]/60 hover:bg-white/[0.06] transition-all duration-300"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 flex items-center justify-center shrink-0 shadow-md shadow-[#22C55E]/20 group-hover:scale-105 transition-transform duration-300">
                     <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22C55E] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#22C55E]" />
                     </span>
                     <PhoneCall className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">Direct Call</span>
-                    <span className="text-sm font-bold text-[#f2ede6]">+91 90794 54032</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[10px] sm:text-[11px] text-zinc-400 font-mono uppercase tracking-wider">
+                      Direct Call
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors truncate">
+                      +91 90794 54032
+                    </span>
                   </div>
-                </a>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
+              </a>
 
-                <a
-                  href="https://wa.me/919079454032"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-emerald-500/50 hover:bg-white/[0.06] transition-all duration-300"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform duration-300">
+              {/* Line 2 - Card 4: Official WhatsApp Green */}
+              <a
+                href="https://wa.me/919079454032"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#25D366]/60 hover:bg-white/[0.06] transition-all duration-300"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/35 flex items-center justify-center shrink-0 shadow-md shadow-[#25D366]/25 group-hover:scale-105 transition-transform duration-300">
                     <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[11px] text-zinc-400 font-mono uppercase tracking-wider">WhatsApp</span>
-                    <span className="text-sm font-bold text-[#f2ede6]">Chat on WhatsApp</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[10px] sm:text-[11px] text-zinc-400 font-mono uppercase tracking-wider">
+                      WhatsApp
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-[#f2ede6] group-hover:text-white transition-colors truncate">
+                      Chat on WhatsApp
+                    </span>
                   </div>
-                </a>
-              </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
+              </a>
             </div>
           </div>
 
