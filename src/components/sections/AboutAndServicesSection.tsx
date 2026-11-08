@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import React from "react";
+import Link from "next/link";
 import {
   ArrowUpRight,
   Target,
@@ -13,10 +11,9 @@ import {
   PhoneCall,
   MessageCircle,
   Sparkles,
+  CheckCircle2,
 } from "lucide-react";
-import ProjectConveyor, {
-  ProjectConveyorHandle,
-} from "@/components/about/ProjectConveyor";
+import ProjectConveyor from "@/components/about/ProjectConveyor";
 
 function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -37,179 +34,60 @@ function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
 }
 
 export default function AboutAndServicesSection() {
-  const pinSectionRef = useRef<HTMLDivElement>(null);
-  const pinnedStageRef = useRef<HTMLDivElement>(null);
-  const aboutTextRef = useRef<HTMLDivElement>(null);
-  const conveyorHolderRef = useRef<HTMLDivElement>(null);
-  const servicesHeaderRef = useRef<HTMLDivElement>(null);
-  const servicesCardsRef = useRef<HTMLDivElement>(null);
-  const conveyorRef = useRef<ProjectConveyorHandle>(null);
-
-  useGSAP(
-    () => {
-      const pinStage = pinnedStageRef.current;
-      const aboutText = aboutTextRef.current;
-      const conveyorHolder = conveyorHolderRef.current;
-      const servicesHeader = servicesHeaderRef.current;
-      const servicesCards = servicesCardsRef.current;
-      const conveyor = conveyorRef.current;
-
-      if (!pinStage || !aboutText || !conveyorHolder) return;
-
-      const mm = gsap.matchMedia();
-
-      // Desktop & Tablet (min-width: 1024px): Seamless Pinned Morph from About 50/50 to Full-Width Services
-      mm.add("(min-width: 1024px)", () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: pinSectionRef.current,
-            start: "top top",
-            end: "+=160%",
-            pin: pinStage,
-            scrub: 0.8,
-            anticipatePin: 1,
-            onUpdate: (self) => {
-              // Interpolate camera straight-on presentation directly inside WebGL from 0 to 1
-              conveyor?.setPresent(self.progress);
-            },
-          },
-        });
-
-        // 1. Fade out About text to the left
-        tl.to(
-          aboutText,
-          {
-            opacity: 0,
-            x: -80,
-            scale: 0.96,
-            pointerEvents: "none",
-            duration: 0.45,
-            ease: "power2.inOut",
-          },
-          0
-        );
-
-        // 2. Expand the 3D conveyor holder from 50% width to 100% full width
-        tl.to(
-          conveyorHolder,
-          {
-            width: "100%",
-            maxWidth: "100%",
-            duration: 0.55,
-            ease: "power2.inOut",
-            onUpdate: () => {
-              conveyor?.resize();
-            },
-          },
-          0.05
-        );
-
-        // 3. Fade in Services Header above the expanded conveyor
-        tl.to(
-          servicesHeader,
-          {
-            opacity: 1,
-            y: 0,
-            pointerEvents: "auto",
-            duration: 0.35,
-            ease: "power2.out",
-          },
-          0.35
-        );
-
-        // 4. Fade in Services Feature Cards below the expanded conveyor
-        tl.to(
-          servicesCards,
-          {
-            opacity: 1,
-            y: 0,
-            pointerEvents: "auto",
-            duration: 0.35,
-            ease: "power2.out",
-          },
-          0.45
-        );
-      });
-
-      // Mobile / Stacked Screens (< 1024px): Clean natural flow with scroll-linked un-tilt
-      mm.add("(max-width: 1023px)", () => {
-        ScrollTrigger.create({
-          trigger: conveyorHolder,
-          start: "top 75%",
-          end: "bottom 25%",
-          scrub: 1,
-          onUpdate: (self) => {
-            conveyor?.setPresent(self.progress);
-          },
-        });
-
-        if (servicesHeader && servicesCards) {
-          gsap.set([servicesHeader, servicesCards], {
-            opacity: 1,
-            y: 0,
-            pointerEvents: "auto",
-          });
-        }
-      });
-    },
-    { scope: pinSectionRef }
-  );
-
   return (
-    <div ref={pinSectionRef} className="relative w-full overflow-hidden bg-black">
-      {/* Anchor targets so navbar navigation works seamlessly */}
-      <div id="about" className="absolute top-0 -mt-20 pointer-events-none" />
-      <div id="services" className="absolute top-[45%] -mt-20 pointer-events-none" />
-
-      {/* Pinned Stage Container */}
-      <div
-        ref={pinnedStageRef}
-        className="w-full min-h-screen flex flex-col justify-center px-4 sm:px-6 py-12 relative overflow-hidden"
+    <div className="relative w-full bg-black text-[#f2ede6]">
+      {/* =========================================================================
+          SECTION 1: ABOUT MUSQUEN MEDIA (50/50 Split Layout)
+          Left: Agency Narrative & 2x2 Official Contact Grid
+          Right: 3D Angled Conveyor Scroller
+         ========================================================================= */}
+      <section
+        id="about"
+        className="py-24 sm:py-32 px-4 sm:px-6 max-w-7xl mx-auto border-t border-white/[0.08] w-full"
       >
-        {/* Services Showcase Header (Overlaid, fades in as conveyor widens) */}
-        <div
-          ref={servicesHeaderRef}
-          className="text-center max-w-3xl mx-auto mb-6 opacity-0 pointer-events-none translate-y-[-20px] transition-transform duration-300"
-        >
-          <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--emerald-subtle)] text-[var(--emerald-light)] text-xs font-bold uppercase tracking-[0.2em] mb-2 border border-[var(--emerald-brand)]/20 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5" />
-            Core Verticals & Live Showcase
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-[#f2ede6] tracking-tight">
-            Integrated Solutions Built for Scale
-          </h2>
-          <p className="mt-2 text-zinc-400 text-xs sm:text-sm font-light max-w-xl mx-auto">
-            Drag or swipe through our live 3D showcase to explore our Meta Ads architectures,
-            viral short-form loops, and bespoke 60 FPS web systems.
-          </p>
-        </div>
-
-        {/* The Interactive Centerpiece: Flex Container with About Text on Left and Conveyor on Right */}
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative">
-          {/* Left Column (About Narrative & 2x2 Official Contact Cards) */}
-          <div
-            ref={aboutTextRef}
-            className="w-full lg:w-1/2 flex flex-col justify-center shrink-0 transition-transform"
-          >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* Left Column (lg:col-span-6): Narrative & 2x2 Official Brand Contacts */}
+          <div className="lg:col-span-6 flex flex-col justify-center">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--emerald-light)]">
               About Musquen Media
             </span>
             <h2 className="text-3xl sm:text-5xl font-black mt-3 text-[#f2ede6] tracking-tight leading-[1.08]">
               Engineering Exponential Brand Velocity
             </h2>
-            <p className="mt-4 text-zinc-400 leading-relaxed text-sm sm:text-base font-light">
-              We combine precision performance media buying, viral social loops, and bespoke 60 FPS
-              immersive web architectures to position your brand at the center of industry gravity.
+            <p className="mt-5 text-zinc-400 leading-relaxed text-sm sm:text-base font-light">
+              We are an elite digital growth and creative technology firm engineered to position
+              your brand at the center of industry gravity.
+            </p>
+            <p className="mt-3 text-zinc-400 leading-relaxed text-sm font-light">
+              By uniting high-precision algorithmic media buying, viral social loop architecture,
+              and bespoke 60 FPS immersive web systems, we systematically convert attention into
+              sustainable enterprise scale.
             </p>
 
-            {/* Real Interactive Contact Hub: Exactly 2 Lines (2x2 Grid) with Official Brand Colors */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 pt-6 border-t border-white/[0.08]">
+            {/* Performance Metric Badges */}
+            <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/[0.08]">
+              <div>
+                <span className="text-xl sm:text-2xl font-black text-[#f2ede6] font-mono">$25M+</span>
+                <p className="text-[10px] sm:text-xs text-zinc-400 uppercase tracking-wider mt-0.5">Ad Spend Scaled</p>
+              </div>
+              <div>
+                <span className="text-xl sm:text-2xl font-black text-[var(--emerald-light)] font-mono">4.2x</span>
+                <p className="text-[10px] sm:text-xs text-zinc-400 uppercase tracking-wider mt-0.5">Average ROAS</p>
+              </div>
+              <div>
+                <span className="text-xl sm:text-2xl font-black text-[#f2ede6] font-mono">60 FPS</span>
+                <p className="text-[10px] sm:text-xs text-zinc-400 uppercase tracking-wider mt-0.5">Bespoke Systems</p>
+              </div>
+            </div>
+
+            {/* Interactive Contact Hub: Exactly 2 Lines (2x2 Grid) with Official Brand Colors */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8 pt-6 border-t border-white/[0.08]">
               {/* Line 1 - Card 1: Official Instagram Brand Gradient */}
               <a
                 href="https://www.instagram.com/musqenmedia/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between p-3 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#dc2743]/60 hover:bg-white/[0.06] transition-all duration-300"
+                className="group flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#dc2743]/60 hover:bg-white/[0.06] transition-all duration-300"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shrink-0 shadow-md shadow-[#dc2743]/25 group-hover:scale-105 group-hover:rotate-6 transition-transform duration-300">
@@ -230,7 +108,7 @@ export default function AboutAndServicesSection() {
               {/* Line 1 - Card 2: Official Direct Email (Gmail Red) */}
               <a
                 href="mailto:musqenmedia@gmail.com"
-                className="group flex items-center justify-between p-3 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#EA4335]/60 hover:bg-white/[0.06] transition-all duration-300"
+                className="group flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#EA4335]/60 hover:bg-white/[0.06] transition-all duration-300"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-9 h-9 rounded-xl bg-[#EA4335]/15 text-[#EA4335] border border-[#EA4335]/30 flex items-center justify-center shrink-0 shadow-md shadow-[#EA4335]/20 group-hover:scale-105 group-hover:-rotate-6 transition-transform duration-300">
@@ -251,7 +129,7 @@ export default function AboutAndServicesSection() {
               {/* Line 2 - Card 3: Official Direct Call */}
               <a
                 href="tel:+919079454032"
-                className="group flex items-center justify-between p-3 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#22C55E]/60 hover:bg-white/[0.06] transition-all duration-300"
+                className="group flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#22C55E]/60 hover:bg-white/[0.06] transition-all duration-300"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="relative w-9 h-9 rounded-xl bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 flex items-center justify-center shrink-0 shadow-md shadow-[#22C55E]/20 group-hover:scale-105 transition-transform duration-300">
@@ -278,7 +156,7 @@ export default function AboutAndServicesSection() {
                 href="https://wa.me/919079454032"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between p-3 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#25D366]/60 hover:bg-white/[0.06] transition-all duration-300"
+                className="group flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-[#25D366]/60 hover:bg-white/[0.06] transition-all duration-300"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-9 h-9 rounded-xl bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/35 flex items-center justify-center shrink-0 shadow-md shadow-[#25D366]/25 group-hover:scale-105 transition-transform duration-300">
@@ -298,65 +176,178 @@ export default function AboutAndServicesSection() {
             </div>
           </div>
 
-          {/* Right Column: The ONE Single Persistent 3D Conveyor (Widening on Scroll) */}
-          <div
-            ref={conveyorHolderRef}
-            className="w-full lg:w-1/2 flex items-center justify-center relative z-10"
-          >
+          {/* Right Column (lg:col-span-6): Interactive 3D Conveyor (Angled Isometric View) */}
+          <div className="lg:col-span-6 flex items-center justify-center relative">
             <ProjectConveyor
-              ref={conveyorRef}
               initialPresent={0}
-              heightClass="h-[520px] sm:h-[620px] lg:h-[680px]"
+              heightClass="h-[480px] sm:h-[580px] lg:h-[640px]"
             />
           </div>
         </div>
+      </section>
 
-        {/* Services Feature Cards (Fades in below the expanded conveyor) */}
-        <div
-          ref={servicesCardsRef}
-          className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8 max-w-6xl mx-auto opacity-0 pointer-events-none translate-y-[20px] transition-transform duration-300 w-full"
-        >
-          {/* Meta Ads Card */}
-          <div className="group relative p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+      {/* =========================================================================
+          SECTION 2: SERVICES SHOWCASE (#services)
+          Header + WIDESCREEN 3D CONVEYOR SHOWCASE (Straight-On Presentation Mode)
+          + 3 Core Verticals Cards (Meta Ads, Social Media Marketing, Web Dev)
+         ========================================================================= */}
+      <section
+        id="services"
+        className="relative py-28 sm:py-36 px-4 sm:px-6 max-w-7xl mx-auto border-t border-white/[0.08] w-full"
+      >
+        {/* Ambient Emerald Glow in Background */}
+        <div className="absolute inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_top,rgba(87,149,126,0.12)_0%,transparent_70%)]" />
+
+        {/* Section Header (Always 100% visible, fully rendered) */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--emerald-subtle)] text-[var(--emerald-light)] text-xs font-bold uppercase tracking-[0.2em] mb-3 border border-[var(--emerald-brand)]/25 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5" />
+            Core Verticals & Live Showcase
+          </span>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#f2ede6] tracking-tight">
+            Integrated Solutions Built for Scale
+          </h2>
+          <p className="mt-4 text-zinc-400 text-sm sm:text-base font-light max-w-2xl mx-auto leading-relaxed">
+            Drag, swipe, or scroll through our live 3D showcase below to explore our Meta Ads
+            attribution engines, viral short-form ecosystems, and bespoke 60 FPS web architectures.
+          </p>
+        </div>
+
+        {/* =========================================================================
+            THE WIDESCREEN 3D CONVEYOR SHOWCASE
+            Spans widescreen (max-w-6xl mx-auto) in straight-on presentation view (present = 1.0)
+            Matching Shakuro's live showcase view!
+           ========================================================================= */}
+        <div className="w-full max-w-6xl mx-auto mb-16 sm:mb-20">
+          <ProjectConveyor
+            initialPresent={1}
+            heightClass="h-[520px] sm:h-[620px] lg:h-[680px]"
+          />
+        </div>
+
+        {/* =========================================================================
+            3 CORE VERTICALS FEATURE CARDS
+           ========================================================================= */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full">
+          {/* Card 1: Meta Ads */}
+          <div className="group relative p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[var(--emerald-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <div className="relative z-10 w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-5 border border-[var(--emerald-brand)]/30">
-              <Target className="w-6 h-6" />
+            <div>
+              <div className="relative z-10 w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-6 border border-[var(--emerald-brand)]/30">
+                <Target className="w-6 h-6" />
+              </div>
+              <h3 className="relative z-10 text-xl font-bold text-[#f2ede6]">Meta Ads Engineering</h3>
+              <p className="relative z-10 mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
+                Laser-focused audience targeting, creative testing engines, and server-side attribution
+                modeling engineered to maximize ROAS at scale.
+              </p>
+
+              <div className="mt-6 space-y-2 relative z-10">
+                {[
+                  "Algorithmic Media Buying",
+                  "First-Party Conversion API",
+                  "Automated Creative Testing Matrices",
+                ].map((feat) => (
+                  <div key={feat} className="flex items-center gap-2 text-xs text-zinc-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--emerald-light)] shrink-0" />
+                    <span>{feat}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="relative z-10 text-lg font-bold text-[#f2ede6]">Meta Ads</h3>
-            <p className="relative z-10 mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-              Laser-focused audience targeting, creative testing engines, and attribution modeling to maximize ROAS.
-            </p>
+
+            <div className="mt-8 pt-6 border-t border-white/[0.08] relative z-10">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--emerald-light)] hover:text-white transition-colors"
+              >
+                <span>Scale Paid Acquisition</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
-          {/* SMM Card */}
-          <div className="group relative p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+          {/* Card 2: Social Media Marketing */}
+          <div className="group relative p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[var(--emerald-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <div className="relative z-10 w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-5 border border-[var(--emerald-brand)]/30">
-              <Megaphone className="w-6 h-6" />
+            <div>
+              <div className="relative z-10 w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-6 border border-[var(--emerald-brand)]/30">
+                <Megaphone className="w-6 h-6" />
+              </div>
+              <h3 className="relative z-10 text-xl font-bold text-[#f2ede6]">
+                Social Media Marketing
+              </h3>
+              <p className="relative z-10 mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
+                High-velocity short-form loops, organic reach engines, and community cultivation
+                engineered to turn passive viewers into brand advocates.
+              </p>
+
+              <div className="mt-6 space-y-2 relative z-10">
+                {[
+                  "Viral Short-Form Video Production",
+                  "Omnichannel Distribution Strategy",
+                  "Active Community & Follower Growth",
+                ].map((feat) => (
+                  <div key={feat} className="flex items-center gap-2 text-xs text-zinc-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--emerald-light)] shrink-0" />
+                    <span>{feat}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="relative z-10 text-lg font-bold text-[#f2ede6]">
-              Social Media Marketing
-            </h3>
-            <p className="relative z-10 mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-              Viral short-form content, consistent community cultivation, and high-engagement social branding.
-            </p>
+
+            <div className="mt-8 pt-6 border-t border-white/[0.08] relative z-10">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--emerald-light)] hover:text-white transition-colors"
+              >
+                <span>Amplify Brand Reach</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
-          {/* Web Dev Card */}
-          <div className="group relative p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+          {/* Card 3: Website Development */}
+          <div className="group relative p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-[var(--emerald-brand)]/50 hover:bg-white/[0.05] shadow-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[var(--emerald-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <div className="relative z-10 w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-5 border border-[var(--emerald-brand)]/30">
-              <Laptop className="w-6 h-6" />
+            <div>
+              <div className="relative z-10 w-12 h-12 rounded-2xl bg-[var(--emerald-subtle)] text-[var(--emerald-light)] flex items-center justify-center mb-6 border border-[var(--emerald-brand)]/30">
+                <Laptop className="w-6 h-6" />
+              </div>
+              <h3 className="relative z-10 text-xl font-bold text-[#f2ede6]">
+                Full-Stack Web Development
+              </h3>
+              <p className="relative z-10 mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
+                Bespoke 60 FPS WebGL engineering, ultra-fast Next.js architecture, Lenis smooth
+                scrolling, and high-conversion landing systems.
+              </p>
+
+              <div className="mt-6 space-y-2 relative z-10">
+                {[
+                  "60 FPS WebGL Interactive Shaders",
+                  "Zero-Lag Smooth Scroll Architecture",
+                  "High-Converting Funnel Engineering",
+                ].map((feat) => (
+                  <div key={feat} className="flex items-center gap-2 text-xs text-zinc-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--emerald-light)] shrink-0" />
+                    <span>{feat}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="relative z-10 text-lg font-bold text-[#f2ede6]">
-              Website Development
-            </h3>
-            <p className="relative z-10 mt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-              Ultra-fast Next.js architecture, Lenis smooth scrolling, WebGL interactive micro-interactions, and conversion flow.
-            </p>
+
+            <div className="mt-8 pt-6 border-t border-white/[0.08] relative z-10">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--emerald-light)] hover:text-white transition-colors"
+              >
+                <span>Build Modern Web Experience</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
