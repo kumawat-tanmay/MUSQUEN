@@ -3,90 +3,22 @@
 import React, {
   useEffect,
   useRef,
-  useState,
   forwardRef,
   useImperativeHandle,
 } from "react";
+import { reelSlides, ReelSlide } from "@/data/reelSlides";
 
 export interface ProjectConveyorHandle {
   setPresent: (val: number) => void;
-  resize: () => void;
+  setScrollOffset: (val: number | null) => void;
+  resize: (width?: number, height?: number) => void;
+  getCanvas: () => HTMLCanvasElement | null;
 }
 
-interface Project {
-  order: number;
-  id: string;
-  title: string;
-  url: string;
-  image: string;
+interface ProjectConveyorProps {
+  initialPresent?: number;
+  className?: string;
 }
-
-const defaultProjects: Project[] = [
-  {
-    order: 3,
-    id: "25156786",
-    title: "Monarch Meta Ads",
-    url: "https://dribbble.com/shots/25156786",
-    image:
-      "https://cdn.dribbble.com/userupload/17469058/file/original-3281c9a5cba68bd522aaa911e9848297.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 5,
-    id: "27274598",
-    title: "Spektral 60FPS Web System",
-    url: "https://dribbble.com/shots/27274598",
-    image:
-      "https://cdn.dribbble.com/userupload/47373040/file/457ad343977ccf420ab30658f9b71531.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 9,
-    id: "27340771",
-    title: "Owari Viral SMM Loops",
-    url: "https://dribbble.com/shots/27340771",
-    image:
-      "https://cdn.dribbble.com/userupload/47603638/file/7c3cd868135a7ddc2c38e06d1194f78b.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 11,
-    id: "27601386",
-    title: "High-Frequency Analytics Dashboard",
-    url: "https://dribbble.com/shots/27601386-Trading-Dashboard-for-Market-Data-Analysis-and-Execution",
-    image:
-      "https://cdn.dribbble.com/userupload/48539267/file/a2b4e384fbb94b1f96dc7a19ae138092.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 12,
-    id: "25900599",
-    title: "Crypto High-Conversion Platform",
-    url: "https://dribbble.com/shots/25900599-Crypto-Exchange-Web-Platform",
-    image:
-      "https://cdn.dribbble.com/userupload/42920999/file/original-93660321e8852132642b3824614bc32f.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 17,
-    id: "26530423",
-    title: "TraderTale Community Architecture",
-    url: "https://dribbble.com/shots/26530423-UI-UX-Design-for-TraderTale-Social-Platform-for-Traders",
-    image:
-      "https://cdn.dribbble.com/userupload/44924480/file/still-439f1b3427d2c6053c9bbfdc5debdbb2.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 19,
-    id: "26249804",
-    title: "AJP Event Scaled Platform",
-    url: "https://dribbble.com/shots/26249804-Website-Design-for-AJP-Jiu-Jitsu-Tournament-Platform",
-    image:
-      "https://cdn.dribbble.com/userupload/44022519/file/still-91d6c4bfcf4accc97a75553bafe66b23.png?format=webp&resize=1200x900",
-  },
-  {
-    order: 20,
-    id: "25764275",
-    title: "Developer Community Social Loop",
-    url: "https://dribbble.com/shots/25764275-Social-Media-Platform-for-Developers",
-    image:
-      "https://cdn.dribbble.com/userupload/41572827/file/original-ca56285eb604f6a12fe3e3c0e020bbd6.png?format=webp&resize=1200x900",
-  },
-];
 
 function wrap(value: number, period: number) {
   return ((value % period) + period) % period;
@@ -158,196 +90,198 @@ function conveyorPoint(t: number) {
 }
 
 function buildConveyorGeometry(count: number, segments = 256) {
-  const width = (((11.6 + Math.PI * 2.04) / count) * 4) / 3;
-  const vertices = new Float32Array((segments + 1) * 2 * 7);
-  const indices = new Uint16Array(segments * 6);
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const normals: number[] = [];
+  const indices: number[] = [];
+  const step = 1 / segments;
+  const width = 1.4;
+
   for (let i = 0; i <= segments; i++) {
-    const point = conveyorPoint(i / segments);
-    for (let side = 0; side < 2; side++) {
-      vertices.set(
-        [
-          (side - 0.5) * width,
-          point.y,
-          point.z,
-          side,
-          i / segments,
-          point.ny,
-          point.nz,
-        ],
-        (i * 2 + side) * 7
-      );
-    }
-    if (i < segments) {
-      const a = i * 2;
-      indices.set([a, a + 2, a + 1, a + 1, a + 2, a + 3], i * 6);
-    }
+    const t = i * step;
+    const pt = conveyorPoint(t);
+    positions.push(-width, pt.y, pt.z);
+    uvs.push(0, t * count);
+    normals.push(pt.ny, pt.nz);
+
+    positions.push(width, pt.y, pt.z);
+    uvs.push(1, t * count);
+    normals.push(pt.ny, pt.nz);
   }
-  return { vertices, indices };
+
+  for (let i = 0; i < segments; i++) {
+    const a = i * 2;
+    const b = a + 1;
+    const c = a + 2;
+    const d = a + 3;
+    indices.push(a, b, c);
+    indices.push(b, d, c);
+  }
+
+  const packed: number[] = [];
+  const vertexCount = positions.length / 3;
+  for (let i = 0; i < vertexCount; i++) {
+    packed.push(
+      positions[i * 3],
+      positions[i * 3 + 1],
+      positions[i * 3 + 2],
+      uvs[i * 2],
+      uvs[i * 2 + 1],
+      normals[i * 2],
+      normals[i * 2 + 1]
+    );
+  }
+
+  return {
+    vertices: new Float32Array(packed),
+    indices: new Uint16Array(indices),
+  };
+}
+
+const vsSource = `
+  attribute vec3 position;
+  attribute vec2 uv;
+  attribute vec2 normalYZ;
+
+  uniform vec3 rotation;
+  uniform vec3 rig;
+  uniform vec3 translation;
+  uniform vec3 camera;
+  uniform vec3 target;
+  uniform float aspect;
+  uniform float offset;
+
+  varying vec2 vUv;
+  varying float vShade;
+
+  mat4 eulerYXZ(vec3 r) {
+    float cx = cos(r.x), sx = sin(r.x);
+    float cy = cos(r.y), sy = sin(r.y);
+    float cz = cos(r.z), sz = sin(r.z);
+    return mat4(
+      cy * cz + sy * sx * sz,  cx * sz, -sy * cz + cy * sx * sz, 0.0,
+     -cy * sz + sy * sx * cz,  cx * cz,  sy * sz + cy * sx * cz, 0.0,
+      sy * cx,                -sx,       cy * cx,                0.0,
+      0.0,                     0.0,      0.0,                    1.0
+    );
+  }
+
+  mat4 lookAt(vec3 eye, vec3 center, vec3 up) {
+    vec3 z = normalize(eye - center);
+    vec3 x = normalize(cross(up, z));
+    vec3 y = cross(z, x);
+    return mat4(
+      x.x, y.x, z.x, 0.0,
+      x.y, y.y, z.y, 0.0,
+      x.z, y.z, z.z, 0.0,
+     -dot(x, eye), -dot(y, eye), -dot(z, eye), 1.0
+    );
+  }
+
+  mat4 perspective(float fovy, float asp, float near, float far) {
+    float f = 1.0 / tan(fovy / 2.0);
+    return mat4(
+      f / asp, 0.0, 0.0, 0.0,
+      0.0, f, 0.0, 0.0,
+      0.0, 0.0, (far + near) / (near - far), -1.0,
+      0.0, 0.0, (2.0 * far * near) / (near - far), 0.0
+    );
+  }
+
+  void main() {
+    vUv = vec2(uv.x, uv.y - offset);
+    mat4 model = eulerYXZ(rig) * mat4(
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      translation.x, translation.y, translation.z, 1.0
+    ) * eulerYXZ(rotation);
+
+    vec4 worldPos = model * vec4(position, 1.0);
+    mat4 view = lookAt(camera, target, vec3(0.0, 1.0, 0.0));
+    mat4 proj = perspective(0.68, aspect, 0.1, 100.0);
+    gl_Position = proj * view * worldPos;
+
+    vec3 normal = normalize((model * vec4(0.0, normalYZ.x, normalYZ.y, 0.0)).xyz);
+    vShade = clamp(dot(normal, normalize(vec3(0.4, 0.8, 1.0))), 0.22, 1.0);
+  }
+`;
+
+const fsSource = `
+  precision mediump float;
+
+  varying vec2 vUv;
+  varying float vShade;
+
+  uniform sampler2D atlas;
+  uniform float count;
+  uniform float picking;
+  uniform vec2 grid;
+  uniform vec2 atlasSize;
+
+  void main() {
+    float slot = floor(mod(vUv.y, count));
+    if (picking > 0.5) {
+      float id = slot + 1.0;
+      gl_FragColor = vec4(id / 255.0, 0.0, 0.0, 1.0);
+      return;
+    }
+
+    float col = mod(slot, grid.x);
+    float row = floor(slot / grid.x);
+    vec2 tile = vec2(fract(vUv.x), fract(vUv.y));
+
+    // Pad tile edges slightly to prevent texture bleeding
+    tile = clamp(tile, 0.015, 0.985);
+    vec2 atlasUv = (vec2(col, row) + tile) / grid;
+    vec4 color = texture2D(atlas, atlasUv);
+
+    // Dark luxury contrast grading
+    vec3 graded = color.rgb * vShade;
+    gl_FragColor = vec4(graded, color.a);
+  }
+`;
+
+function createShader(gl: WebGLRenderingContext, type: number, src: string) {
+  const shader = gl.createShader(type);
+  if (!shader) return null;
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+  }
+  return shader;
 }
 
 function createConveyor(
   canvas: HTMLCanvasElement,
   images: (HTMLImageElement | null)[],
-  projects: Project[]
+  projects: ReelSlide[]
 ) {
   const gl = canvas.getContext("webgl", {
-    alpha: true,
     antialias: true,
-    premultipliedAlpha: false,
+    alpha: true,
+    powerPreference: "high-performance",
+    preserveDrawingBuffer: false,
   });
-  if (!gl) throw new Error("WebGL is unavailable.");
 
-  const vertexSource = `
-    attribute vec3 position;
-    attribute vec2 uv;
-    attribute vec2 normalYZ;
-    uniform vec3 rotation, rig, camera, target;
-    uniform vec3 translation;
-    uniform float aspect;
-    varying vec2 vUv;
-    varying vec3 vNormal;
-    varying vec3 vPosition, vView, vLight;
-    vec3 rotate(vec3 p, vec3 r) {
-      vec3 c = cos(r), s = sin(r);
-      p.xy = mat2(c.z, s.z, -s.z, c.z) * p.xy;
-      p.xz = mat2(c.y, -s.y, s.y, c.y) * p.xz;
-      p.yz = mat2(c.x, s.x, -s.x, c.x) * p.yz;
-      return p;
-    }
-    vec3 unrotate(vec3 p, vec3 r) {
-      vec3 c = cos(r), s = sin(r);
-      p.yz = mat2(c.x, -s.x, s.x, c.x) * p.yz;
-      p.xz = mat2(c.y, s.y, -s.y, c.y) * p.xz;
-      p.xy = mat2(c.z, -s.z, s.z, c.z) * p.xy;
-      return p;
-    }
-    void main() {
-      vUv = uv;
-      vNormal = rotate(rotate(vec3(0.0, normalYZ), rotation), rig);
-      vPosition = position;
-      vLight = unrotate(unrotate(normalize(vec3(-0.45, 1.1, 0.8)), rig), rotation);
-      vec3 world = rotate(rotate(position * 0.79, rotation), rig) + translation;
-      vView = camera - world;
-      vec3 forward = normalize(target - camera);
-      vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));
-      vec3 up = cross(right, forward);
-      vec3 delta = world - camera;
-      vec3 view = vec3(dot(delta, right), dot(delta, up), -dot(delta, forward));
-      view.xy *= 1.122;
-      gl_Position = vec4(view.x * 3.2708526 / aspect, view.y * 3.2708526, -1.002002 * view.z - 0.2002002, -view.z);
-      gl_Position.y += gl_Position.w * 0.18;
-    }
-  `;
+  if (!gl) return null;
 
-  const fragmentSource = `
-    precision highp float;
-    uniform sampler2D atlas;
-    uniform float offset, count, picking;
-    uniform vec2 grid, atlasSize;
-    varying vec2 vUv;
-    varying vec3 vNormal;
-    varying vec3 vPosition, vView, vLight;
-
-    float edgeShadow(vec3 origin, vec3 ray, float distance) {
-      if (distance < 0.025) return 0.0;
-      float halfWidth = (11.6 + 6.408849) / count * 0.666667;
-      float edge = halfWidth - abs(origin.x + ray.x * distance);
-      return smoothstep(-0.06, 0.06 + distance * 0.12, edge);
-    }
-
-    float rayShadow(vec3 origin, vec3 ray) {
-      float shadow = 0.0;
-      if (abs(ray.z) > 0.0001) {
-        for (int side = 0; side < 2; side++) {
-          float z = side == 0 ? -1.02 : 1.02;
-          float distance = (z - origin.z) / ray.z;
-          if (abs(origin.y + ray.y * distance) <= 2.9)
-            shadow = max(shadow, edgeShadow(origin, ray, distance));
-        }
-      }
-      float a = dot(ray.yz, ray.yz);
-      for (int end = 0; end < 2; end++) {
-        float signY = end == 0 ? -1.0 : 1.0;
-        vec2 delta = origin.yz - vec2(signY * 2.9, 0.0);
-        float b = dot(delta, ray.yz);
-        float discriminant = b * b - a * (dot(delta, delta) - 1.0404);
-        if (discriminant >= 0.0 && a > 0.0001) {
-          for (int root = 0; root < 2; root++) {
-            float distance = (-b + (root == 0 ? -1.0 : 1.0) * sqrt(discriminant)) / a;
-            if (signY * (origin.y + ray.y * distance) >= 2.9)
-              shadow = max(shadow, edgeShadow(origin, ray, distance));
-          }
-        }
-      }
-      return shadow;
-    }
-
-    float visibility(vec3 normal) {
-      vec3 light = normalize(vLight);
-      vec3 tangent = normalize(cross(light, vec3(0.0, 1.0, 0.0)));
-      vec3 bitangent = cross(light, tangent);
-      vec3 origin = vPosition + normal * 0.018;
-      float shadow = rayShadow(origin, light) * 2.0;
-      shadow += rayShadow(origin, normalize(light + tangent * 0.12));
-      shadow += rayShadow(origin, normalize(light - tangent * 0.12));
-      shadow += rayShadow(origin, normalize(light + bitangent * 0.12));
-      shadow += rayShadow(origin, normalize(light - bitangent * 0.12));
-      return 1.0 - shadow / 6.0;
-    }
-
-    void main() {
-      float phase = mod(vUv.y * count + offset, count);
-      float tile = floor(phase);
-      if (picking > 0.5) {
-        gl_FragColor = vec4((tile + 1.0) / 255.0, 0.0, 0.0, 1.0);
-        return;
-      }
-      vec2 cell = vec2(mod(tile, grid.x), floor(tile / grid.x));
-      vec2 local = vec2(vUv.x, 1.0 - fract(phase));
-      vec2 inset = 0.5 * grid / atlasSize;
-      vec2 sampleUv = (cell + mix(inset, 1.0 - inset, local)) / grid;
-      vec3 color = texture2D(atlas, sampleUv).rgb;
-      vec3 normal = normalize(vNormal);
-      float side = dot(normal, vView) >= 0.0 ? 1.0 : -1.0;
-      normal *= side;
-      vec3 localNormal = vec3(0.0, normalize(vec2(vPosition.y - clamp(vPosition.y, -2.9, 2.9), vPosition.z))) * side;
-      float visible = visibility(localNormal);
-      vec3 light = normalize(vec3(-0.45, 1.1, 0.8));
-      float diffuse = max(0.0, dot(normal, light)) * visible;
-      float ambient = side > 0.0 ? 0.38 : 0.16;
-      float fold = smoothstep(2.35, 3.92, abs(vPosition.y));
-      ambient *= 1.0 - (side < 0.0 ? 0.35 : 0.12) * fold;
-      float highlight = pow(max(0.0, dot(normal, normalize(light + normalize(vView)))), 28.0) * visible * 0.035;
-      float luma = dot(color, vec3(0.299, 0.587, 0.114));
-      color = max(vec3(0.0), mix(vec3(luma), color, 1.04));
-      vec3 lit = pow(color, vec3(2.2)) * (ambient * vec3(0.94, 0.97, 1.0) + diffuse * 0.9 + highlight);
-      gl_FragColor = vec4(pow(clamp(lit, 0.0, 1.0), vec3(1.0 / 2.2)), 1.0);
-    }
-  `;
+  const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+  const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+  if (!vs || !fs) return null;
 
   const program = gl.createProgram();
-  if (!program) throw new Error("Could not create WebGL program");
-
-  const compileShader = (type: number, src: string) => {
-    const s = gl.createShader(type);
-    if (!s) throw new Error("Shader creation failed");
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-      const err = gl.getShaderInfoLog(s);
-      gl.deleteShader(s);
-      throw new Error(err || "Shader compile error");
-    }
-    return s;
-  };
-
-  const vs = compileShader(gl.VERTEX_SHADER, vertexSource);
-  const fs = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+  if (!program) return null;
   gl.attachShader(program, vs);
   gl.attachShader(program, fs);
   gl.linkProgram(program);
+
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramInfoLog(program) || "Program link error");
+    console.error(gl.getProgramInfoLog(program));
+    return null;
   }
   gl.deleteShader(vs);
   gl.deleteShader(fs);
@@ -386,7 +320,7 @@ function createConveyor(
   atlas.height = rows * tileHeight;
   const ctx = atlas.getContext("2d");
   if (ctx) {
-    ctx.fillStyle = "#0d1416";
+    ctx.fillStyle = "#0c100e";
     ctx.fillRect(0, 0, atlas.width, atlas.height);
     images.forEach((image, index) => {
       const x = (index % columns) * tileWidth;
@@ -406,11 +340,11 @@ function createConveyor(
           height
         );
       } else {
-        ctx.fillStyle = "#162022";
+        ctx.fillStyle = "#141a17";
         ctx.fillRect(x + 10, y + 10, tileWidth - 20, tileHeight - 20);
-        ctx.fillStyle = "#7ECBA9";
-        ctx.font = `bold ${tileWidth / 20}px sans-serif`;
-        ctx.fillText(projects[index].title, x + 30, y + tileHeight / 2);
+        ctx.fillStyle = "#57957E";
+        ctx.font = `bold ${tileWidth / 22}px sans-serif`;
+        ctx.fillText(projects[index]?.title || "Project", x + 30, y + tileHeight / 2);
       }
     });
   }
@@ -422,19 +356,6 @@ function createConveyor(
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas);
-
-  const anisotropy =
-    gl.getExtension("EXT_texture_filter_anisotropic") ||
-    gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic") ||
-    gl.getExtension("MOZ_EXT_texture_filter_anisotropic");
-  if (anisotropy) {
-    const maxAniso = gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-    gl.texParameterf(
-      gl.TEXTURE_2D,
-      anisotropy.TEXTURE_MAX_ANISOTROPY_EXT,
-      Math.min(8, maxAniso)
-    );
-  }
 
   const locs: Record<string, WebGLUniformLocation | null> = {};
   [
@@ -468,8 +389,8 @@ function createConveyor(
     if (!gl) return;
     const ease = state.present * state.present * (3 - 2 * state.present);
     const fade = 1 - ease;
-    const x = state.parallaxX * fade,
-      y = state.parallaxY * fade;
+    const x = state.parallaxX * fade;
+    const y = state.parallaxY * fade;
     const zoom = Math.max(1, (0.9 * viewportHeight) / viewportWidth);
 
     if (locs.camera)
@@ -516,7 +437,7 @@ function createConveyor(
       if (!gl) return;
       viewportWidth = width;
       viewportHeight = height;
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.75);
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -555,38 +476,32 @@ function createConveyor(
   };
 }
 
-export interface ProjectConveyorProps {
-  initialPresent?: number;
-  className?: string;
-  heightClass?: string;
-}
-
 const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
-  function ProjectConveyor(
-    {
-      initialPresent = 0,
-      className = "",
-      heightClass = "h-[540px] sm:h-[640px] lg:h-[720px]",
-    },
-    ref
-  ) {
+  function ProjectConveyor({ initialPresent = 0, className = "" }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [activeTitle, setActiveTitle] = useState<string>("");
+
     const targetPresentRef = useRef(initialPresent);
+    const scrollOffsetRef = useRef<number | null>(null);
     const conveyorInstanceRef = useRef<ReturnType<typeof createConveyor> | null>(null);
 
     useImperativeHandle(ref, () => ({
       setPresent(val: number) {
         targetPresentRef.current = Math.max(0, Math.min(1, val));
       },
-      resize() {
-        if (containerRef.current && conveyorInstanceRef.current) {
-          conveyorInstanceRef.current.resize(
-            containerRef.current.clientWidth,
-            containerRef.current.clientHeight
-          );
+      setScrollOffset(val: number | null) {
+        scrollOffsetRef.current = val;
+      },
+      resize(width?: number, height?: number) {
+        if (!containerRef.current || !conveyorInstanceRef.current) return;
+        const w = width ?? containerRef.current.clientWidth;
+        const h = height ?? containerRef.current.clientHeight;
+        if (w > 0 && h > 0) {
+          conveyorInstanceRef.current.resize(w, h);
         }
+      },
+      getCanvas() {
+        return canvasRef.current;
       },
     }));
 
@@ -602,7 +517,7 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
 
       const motion: MotionState = {
         offset: 0,
-        velocity: 0.008, // Subtle resting drift keeps the conveyor alive
+        velocity: 0.006,
         present: initialPresent,
         targetPresent: targetPresentRef.current,
         pointerX: 0,
@@ -611,27 +526,27 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
         parallaxY: 0,
       };
 
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
+      const reducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      // Load Project Images
-      const imagePromises = defaultProjects.map(
-        (proj) =>
+      // Load all slides from the single reelSlides source
+      const imagePromises = reelSlides.map(
+        (slide) =>
           new Promise<HTMLImageElement | null>((resolve) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.onload = () => resolve(img);
             img.onerror = () => resolve(null);
-            img.src = proj.image;
+            img.src = slide.image;
           })
       );
 
       Promise.all(imagePromises).then((loadedImages) => {
         try {
-          conveyor = createConveyor(canvas, loadedImages, defaultProjects);
+          conveyor = createConveyor(canvas, loadedImages, reelSlides);
           conveyorInstanceRef.current = conveyor;
-          if (container) {
+          if (container && conveyor && container.clientWidth > 0 && container.clientHeight > 0) {
             conveyor.resize(container.clientWidth, container.clientHeight);
           }
         } catch (err) {
@@ -646,12 +561,26 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
 
       window.addEventListener("resize", handleResize);
 
-      const resizeObserver = new ResizeObserver(() => {
-        handleResize();
-      });
-      resizeObserver.observe(container);
+      // WebGL context guard
+      const handleContextLost = (e: Event) => {
+        e.preventDefault();
+        console.warn("WebGL context lost. Suspending conveyor rendering.");
+      };
+      const handleContextRestored = () => {
+        console.info("WebGL context restored. Rebuilding conveyor.");
+        if (canvas) {
+          Promise.all(imagePromises).then((loadedImages) => {
+            conveyor = createConveyor(canvas, loadedImages, reelSlides);
+            conveyorInstanceRef.current = conveyor;
+            if (container && conveyor) conveyor.resize(container.clientWidth, container.clientHeight);
+          });
+        }
+      };
 
-      // Pointer Dragging and Hover Interactions
+      canvas.addEventListener("webglcontextlost", handleContextLost);
+      canvas.addEventListener("webglcontextrestored", handleContextRestored);
+
+      // Free Pointer Dragging (Without blocking vertical page scroll!)
       let touch: {
         id: number;
         y: number;
@@ -661,6 +590,8 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
       let dragged = false;
 
       const onPointerDown = (e: PointerEvent) => {
+        // If external scroll offset is actively driven, let scroll rule
+        if (scrollOffsetRef.current !== null) return;
         dragged = false;
         touch = {
           id: e.pointerId,
@@ -668,7 +599,9 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
           startX: e.clientX,
           startY: e.clientY,
         };
-        container.setPointerCapture(e.pointerId);
+        try {
+          container.setPointerCapture(e.pointerId);
+        } catch {}
       };
 
       const onPointerMove = (e: PointerEvent) => {
@@ -679,25 +612,15 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
         if (touch && touch.id === e.pointerId) {
           const delta = touch.y - e.clientY;
           touch.y = e.clientY;
-          motion.velocity += delta * 0.0018;
-          if (
-            Math.hypot(touch.startX - e.clientX, touch.startY - e.clientY) > 6
-          ) {
+          if (scrollOffsetRef.current === null) {
+            motion.velocity += delta * 0.0018;
+          }
+          if (Math.hypot(touch.startX - e.clientX, touch.startY - e.clientY) > 8) {
             dragged = true;
           }
         } else {
           motion.pointerX = (localX / rect.width) * 2 - 1;
           motion.pointerY = (localY / rect.height) * 2 - 1;
-          if (conveyor && Math.abs(motion.velocity) < 0.004) {
-            const slot = conveyor.pick(localX, localY, motion);
-            if (slot >= 0 && slot < defaultProjects.length) {
-              canvas.style.cursor = "pointer";
-              setActiveTitle(defaultProjects[slot].title);
-            } else {
-              canvas.style.cursor = "grab";
-              setActiveTitle("");
-            }
-          }
         }
       };
 
@@ -711,13 +634,12 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
         const localX = e.clientX - rect.left;
         const localY = e.clientY - rect.top;
         const slot = conveyor.pick(localX, localY, motion);
-        if (slot >= 0 && slot < defaultProjects.length) {
-          window.open(defaultProjects[slot].url, "_blank", "noopener,noreferrer");
+        if (slot >= 0 && slot < reelSlides.length) {
+          const url = reelSlides[slot].url;
+          if (url && url !== "#") {
+            window.open(url, "_blank", "noopener,noreferrer");
+          }
         }
-      };
-
-      const onWheel = (e: WheelEvent) => {
-        motion.velocity += e.deltaY * 0.0003;
       };
 
       container.addEventListener("pointerdown", onPointerDown);
@@ -725,13 +647,14 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
       container.addEventListener("pointerup", onPointerUp);
       container.addEventListener("pointercancel", onPointerUp);
       container.addEventListener("click", onClick);
-      container.addEventListener("wheel", onWheel, { passive: true });
 
-      // Viewport Intersection Observer (0% idle GPU when scrolled away)
+      // Viewport Intersection Observer (0% idle GPU when off-screen)
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             inView = entry.isIntersecting;
+            // Extra Rule: set pointer-events to auto only while in viewport
+            canvas.style.pointerEvents = inView ? "auto" : "none";
           });
         },
         { threshold: 0.05 }
@@ -747,15 +670,22 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
           : 1;
         prevTime = time;
 
-        // Smoothly read targetPresent directly from ref (0 React re-renders!)
         motion.targetPresent = targetPresentRef.current;
 
-        // Small baseline momentum if idle
-        if (Math.abs(motion.velocity) < 0.001 && !touch) {
-          motion.velocity = 0.004;
+        // If GSAP ScrollTrigger is driving the offset during pinned stage:
+        if (scrollOffsetRef.current !== null) {
+          motion.offset = scrollOffsetRef.current;
+          motion.velocity = 0;
+          motion.present +=
+            (motion.targetPresent - motion.present) * (reducedMotion ? 1 : 0.15);
+        } else {
+          // Subtle baseline momentum when free
+          if (Math.abs(motion.velocity) < 0.001 && !touch) {
+            motion.velocity = 0.004;
+          }
+          advanceMotion(motion, frames, reelSlides.length, reducedMotion);
         }
 
-        advanceMotion(motion, frames, defaultProjects.length, reducedMotion);
         conveyor?.draw(motion);
       };
 
@@ -764,15 +694,16 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
       return () => {
         cancelAnimationFrame(animId);
         window.removeEventListener("resize", handleResize);
-        resizeObserver.disconnect();
         observer.disconnect();
+
+        canvas.removeEventListener("webglcontextlost", handleContextLost);
+        canvas.removeEventListener("webglcontextrestored", handleContextRestored);
 
         container.removeEventListener("pointerdown", onPointerDown);
         container.removeEventListener("pointermove", onPointerMove);
         container.removeEventListener("pointerup", onPointerUp);
         container.removeEventListener("pointercancel", onPointerUp);
         container.removeEventListener("click", onClick);
-        container.removeEventListener("wheel", onWheel);
 
         conveyor?.dispose();
       };
@@ -781,7 +712,7 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
     return (
       <div
         ref={containerRef}
-        className={`relative w-full ${heightClass} rounded-3xl overflow-hidden bg-transparent border-0 border-none touch-none select-none group ${className}`}
+        className={`relative w-full h-full rounded-3xl overflow-hidden bg-transparent select-none touch-pan-y group ${className}`}
       >
         <canvas
           ref={canvasRef}
@@ -792,8 +723,8 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(0,0,0,0.7)_100%)]" />
 
         {/* Subtle Top & Bottom Shadow Gradients */}
-        <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none bg-gradient-to-b from-black/80 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none bg-gradient-to-b from-black/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
         {/* Floating Interactive Badge */}
         <div className="absolute top-4 left-4 z-10 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
@@ -803,20 +734,10 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
           </span>
         </div>
 
-        {/* Active Project Title Pill On Hover */}
-        {activeTitle && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none px-4 py-2 rounded-full bg-[#f2ede6] text-[#0b0705] font-semibold text-xs tracking-wider uppercase shadow-xl animate-fade-in whitespace-nowrap">
-            <span>{activeTitle}</span>
-            <span className="ml-1.5 text-[10px] opacity-60">↗</span>
-          </div>
-        )}
-
         {/* Bottom Hint */}
-        {!activeTitle && (
-          <div className="absolute bottom-4 right-4 z-10 pointer-events-none text-[10px] font-mono tracking-widest text-[#f2ede6]/40 uppercase">
-            Drag • Scroll • Click
-          </div>
-        )}
+        <div className="absolute bottom-4 right-4 z-10 pointer-events-none text-[10px] font-mono tracking-widest text-[#f2ede6]/40 uppercase">
+          Drag • Scroll • Click
+        </div>
       </div>
     );
   }
