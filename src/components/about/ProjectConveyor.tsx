@@ -1,6 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+
+export interface ProjectConveyorHandle {
+  setPresent: (val: number) => void;
+  resize: () => void;
+}
 
 interface Project {
   order: number;
@@ -545,251 +556,270 @@ function createConveyor(
 }
 
 export interface ProjectConveyorProps {
-  presentProgress?: number;
+  initialPresent?: number;
   className?: string;
   heightClass?: string;
 }
 
-export default function ProjectConveyor({
-  presentProgress = 0,
-  className = "",
-  heightClass = "h-[540px] sm:h-[640px] lg:h-[700px]",
-}: ProjectConveyorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [activeTitle, setActiveTitle] = useState<string>("");
-  const targetPresentRef = useRef(presentProgress);
+const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
+  function ProjectConveyor(
+    {
+      initialPresent = 0,
+      className = "",
+      heightClass = "h-[540px] sm:h-[640px] lg:h-[720px]",
+    },
+    ref
+  ) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [activeTitle, setActiveTitle] = useState<string>("");
+    const targetPresentRef = useRef(initialPresent);
+    const conveyorInstanceRef = useRef<ReturnType<typeof createConveyor> | null>(null);
 
-  useEffect(() => {
-    targetPresentRef.current = Math.max(0, Math.min(1, presentProgress));
-  }, [presentProgress]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-
-    let conveyor: ReturnType<typeof createConveyor> | null = null;
-    let animId = 0;
-    let prevTime = 0;
-    let inView = true;
-
-    const motion: MotionState = {
-      offset: 0,
-      velocity: 0.008, // Subtle resting drift keeps the conveyor alive
-      present: 0,
-      targetPresent: targetPresentRef.current,
-      pointerX: 0,
-      pointerY: 0,
-      parallaxX: 0,
-      parallaxY: 0,
-    };
-
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    // Load Project Images
-    const imagePromises = defaultProjects.map(
-      (proj) =>
-        new Promise<HTMLImageElement | null>((resolve) => {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          img.onload = () => resolve(img);
-          img.onerror = () => resolve(null);
-          img.src = proj.image;
-        })
-    );
-
-    Promise.all(imagePromises).then((loadedImages) => {
-      try {
-        conveyor = createConveyor(canvas, loadedImages, defaultProjects);
-        if (container) {
-          conveyor.resize(container.clientWidth, container.clientHeight);
+    useImperativeHandle(ref, () => ({
+      setPresent(val: number) {
+        targetPresentRef.current = Math.max(0, Math.min(1, val));
+      },
+      resize() {
+        if (containerRef.current && conveyorInstanceRef.current) {
+          conveyorInstanceRef.current.resize(
+            containerRef.current.clientWidth,
+            containerRef.current.clientHeight
+          );
         }
-      } catch (err) {
-        console.warn("WebGL Conveyor init notice:", err);
-      }
-    });
+      },
+    }));
 
-    const handleResize = () => {
-      if (!container || !conveyor) return;
-      conveyor.resize(container.clientWidth, container.clientHeight);
-    };
+    useEffect(() => {
+      const container = containerRef.current;
+      const canvas = canvasRef.current;
+      if (!container || !canvas) return;
 
-    window.addEventListener("resize", handleResize);
+      let conveyor: ReturnType<typeof createConveyor> | null = null;
+      let animId = 0;
+      let prevTime = 0;
+      let inView = true;
 
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
-    resizeObserver.observe(container);
-
-    // Pointer Dragging and Hover Interactions
-    let touch: {
-      id: number;
-      y: number;
-      startX: number;
-      startY: number;
-    } | null = null;
-    let dragged = false;
-
-    const onPointerDown = (e: PointerEvent) => {
-      dragged = false;
-      touch = {
-        id: e.pointerId,
-        y: e.clientY,
-        startX: e.clientX,
-        startY: e.clientY,
+      const motion: MotionState = {
+        offset: 0,
+        velocity: 0.008, // Subtle resting drift keeps the conveyor alive
+        present: initialPresent,
+        targetPresent: targetPresentRef.current,
+        pointerX: 0,
+        pointerY: 0,
+        parallaxX: 0,
+        parallaxY: 0,
       };
-      container.setPointerCapture(e.pointerId);
-    };
 
-    const onPointerMove = (e: PointerEvent) => {
-      const rect = container.getBoundingClientRect();
-      const localX = e.clientX - rect.left;
-      const localY = e.clientY - rect.top;
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
-      if (touch && touch.id === e.pointerId) {
-        const delta = touch.y - e.clientY;
-        touch.y = e.clientY;
-        motion.velocity += delta * 0.0018;
-        if (
-          Math.hypot(touch.startX - e.clientX, touch.startY - e.clientY) > 6
-        ) {
-          dragged = true;
+      // Load Project Images
+      const imagePromises = defaultProjects.map(
+        (proj) =>
+          new Promise<HTMLImageElement | null>((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = proj.image;
+          })
+      );
+
+      Promise.all(imagePromises).then((loadedImages) => {
+        try {
+          conveyor = createConveyor(canvas, loadedImages, defaultProjects);
+          conveyorInstanceRef.current = conveyor;
+          if (container) {
+            conveyor.resize(container.clientWidth, container.clientHeight);
+          }
+        } catch (err) {
+          console.warn("WebGL Conveyor init notice:", err);
         }
-      } else {
-        motion.pointerX = (localX / rect.width) * 2 - 1;
-        motion.pointerY = (localY / rect.height) * 2 - 1;
-        if (conveyor && Math.abs(motion.velocity) < 0.004) {
-          const slot = conveyor.pick(localX, localY, motion);
-          if (slot >= 0 && slot < defaultProjects.length) {
-            canvas.style.cursor = "pointer";
-            setActiveTitle(defaultProjects[slot].title);
-          } else {
-            canvas.style.cursor = "grab";
-            setActiveTitle("");
+      });
+
+      const handleResize = () => {
+        if (!container || !conveyor) return;
+        conveyor.resize(container.clientWidth, container.clientHeight);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      const resizeObserver = new ResizeObserver(() => {
+        handleResize();
+      });
+      resizeObserver.observe(container);
+
+      // Pointer Dragging and Hover Interactions
+      let touch: {
+        id: number;
+        y: number;
+        startX: number;
+        startY: number;
+      } | null = null;
+      let dragged = false;
+
+      const onPointerDown = (e: PointerEvent) => {
+        dragged = false;
+        touch = {
+          id: e.pointerId,
+          y: e.clientY,
+          startX: e.clientX,
+          startY: e.clientY,
+        };
+        container.setPointerCapture(e.pointerId);
+      };
+
+      const onPointerMove = (e: PointerEvent) => {
+        const rect = container.getBoundingClientRect();
+        const localX = e.clientX - rect.left;
+        const localY = e.clientY - rect.top;
+
+        if (touch && touch.id === e.pointerId) {
+          const delta = touch.y - e.clientY;
+          touch.y = e.clientY;
+          motion.velocity += delta * 0.0018;
+          if (
+            Math.hypot(touch.startX - e.clientX, touch.startY - e.clientY) > 6
+          ) {
+            dragged = true;
+          }
+        } else {
+          motion.pointerX = (localX / rect.width) * 2 - 1;
+          motion.pointerY = (localY / rect.height) * 2 - 1;
+          if (conveyor && Math.abs(motion.velocity) < 0.004) {
+            const slot = conveyor.pick(localX, localY, motion);
+            if (slot >= 0 && slot < defaultProjects.length) {
+              canvas.style.cursor = "pointer";
+              setActiveTitle(defaultProjects[slot].title);
+            } else {
+              canvas.style.cursor = "grab";
+              setActiveTitle("");
+            }
           }
         }
-      }
-    };
+      };
 
-    const onPointerUp = () => {
-      touch = null;
-    };
+      const onPointerUp = () => {
+        touch = null;
+      };
 
-    const onClick = (e: MouseEvent) => {
-      if (dragged || !conveyor) return;
-      const rect = container.getBoundingClientRect();
-      const localX = e.clientX - rect.left;
-      const localY = e.clientY - rect.top;
-      const slot = conveyor.pick(localX, localY, motion);
-      if (slot >= 0 && slot < defaultProjects.length) {
-        window.open(defaultProjects[slot].url, "_blank", "noopener,noreferrer");
-      }
-    };
+      const onClick = (e: MouseEvent) => {
+        if (dragged || !conveyor) return;
+        const rect = container.getBoundingClientRect();
+        const localX = e.clientX - rect.left;
+        const localY = e.clientY - rect.top;
+        const slot = conveyor.pick(localX, localY, motion);
+        if (slot >= 0 && slot < defaultProjects.length) {
+          window.open(defaultProjects[slot].url, "_blank", "noopener,noreferrer");
+        }
+      };
 
-    const onWheel = (e: WheelEvent) => {
-      motion.velocity += e.deltaY * 0.0003;
-    };
+      const onWheel = (e: WheelEvent) => {
+        motion.velocity += e.deltaY * 0.0003;
+      };
 
-    container.addEventListener("pointerdown", onPointerDown);
-    container.addEventListener("pointermove", onPointerMove);
-    container.addEventListener("pointerup", onPointerUp);
-    container.addEventListener("pointercancel", onPointerUp);
-    container.addEventListener("click", onClick);
-    container.addEventListener("wheel", onWheel, { passive: true });
+      container.addEventListener("pointerdown", onPointerDown);
+      container.addEventListener("pointermove", onPointerMove);
+      container.addEventListener("pointerup", onPointerUp);
+      container.addEventListener("pointercancel", onPointerUp);
+      container.addEventListener("click", onClick);
+      container.addEventListener("wheel", onWheel, { passive: true });
 
-    // Viewport Intersection Observer (0% idle GPU when scrolled away)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          inView = entry.isIntersecting;
-        });
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(container);
+      // Viewport Intersection Observer (0% idle GPU when scrolled away)
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            inView = entry.isIntersecting;
+          });
+        },
+        { threshold: 0.05 }
+      );
+      observer.observe(container);
 
-    const render = (time: number) => {
+      const render = (time: number) => {
+        animId = requestAnimationFrame(render);
+        if (!inView) return;
+
+        const frames = prevTime
+          ? Math.min((time - prevTime) / (1000 / 60), 3)
+          : 1;
+        prevTime = time;
+
+        // Smoothly read targetPresent directly from ref (0 React re-renders!)
+        motion.targetPresent = targetPresentRef.current;
+
+        // Small baseline momentum if idle
+        if (Math.abs(motion.velocity) < 0.001 && !touch) {
+          motion.velocity = 0.004;
+        }
+
+        advanceMotion(motion, frames, defaultProjects.length, reducedMotion);
+        conveyor?.draw(motion);
+      };
+
       animId = requestAnimationFrame(render);
-      if (!inView) return;
 
-      const frames = prevTime
-        ? Math.min((time - prevTime) / (1000 / 60), 3)
-        : 1;
-      prevTime = time;
+      return () => {
+        cancelAnimationFrame(animId);
+        window.removeEventListener("resize", handleResize);
+        resizeObserver.disconnect();
+        observer.disconnect();
 
-      // Sync targetPresent from prop dynamically
-      motion.targetPresent = targetPresentRef.current;
+        container.removeEventListener("pointerdown", onPointerDown);
+        container.removeEventListener("pointermove", onPointerMove);
+        container.removeEventListener("pointerup", onPointerUp);
+        container.removeEventListener("pointercancel", onPointerUp);
+        container.removeEventListener("click", onClick);
+        container.removeEventListener("wheel", onWheel);
 
-      // Small baseline momentum if idle
-      if (Math.abs(motion.velocity) < 0.001 && !touch) {
-        motion.velocity = 0.004;
-      }
+        conveyor?.dispose();
+      };
+    }, [initialPresent]);
 
-      advanceMotion(motion, frames, defaultProjects.length, reducedMotion);
-      conveyor?.draw(motion);
-    };
+    return (
+      <div
+        ref={containerRef}
+        className={`relative w-full ${heightClass} rounded-3xl overflow-hidden bg-transparent border-0 border-none touch-none select-none group ${className}`}
+      >
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full block cursor-grab active:cursor-grabbing transition-opacity duration-300"
+        />
 
-    animId = requestAnimationFrame(render);
+        {/* Ambient Radial Glass Vignette */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(0,0,0,0.7)_100%)]" />
 
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", handleResize);
-      resizeObserver.disconnect();
-      observer.disconnect();
+        {/* Subtle Top & Bottom Shadow Gradients */}
+        <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none bg-gradient-to-b from-black/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-      container.removeEventListener("pointerdown", onPointerDown);
-      container.removeEventListener("pointermove", onPointerMove);
-      container.removeEventListener("pointerup", onPointerUp);
-      container.removeEventListener("pointercancel", onPointerUp);
-      container.removeEventListener("click", onClick);
-      container.removeEventListener("wheel", onWheel);
+        {/* Floating Interactive Badge */}
+        <div className="absolute top-4 left-4 z-10 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
+          <span className="w-2 h-2 rounded-full bg-[var(--emerald-light)] animate-pulse" />
+          <span className="text-[11px] font-mono tracking-wider text-[#f2ede6]/75 uppercase">
+            Interactive 3D Work Reel
+          </span>
+        </div>
 
-      conveyor?.dispose();
-    };
-  }, []);
+        {/* Active Project Title Pill On Hover */}
+        {activeTitle && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none px-4 py-2 rounded-full bg-[#f2ede6] text-[#0b0705] font-semibold text-xs tracking-wider uppercase shadow-xl animate-fade-in whitespace-nowrap">
+            <span>{activeTitle}</span>
+            <span className="ml-1.5 text-[10px] opacity-60">↗</span>
+          </div>
+        )}
 
-  return (
-    <div
-      ref={containerRef}
-      className={`relative w-full ${heightClass} rounded-3xl overflow-hidden bg-transparent border-0 border-none touch-none select-none group ${className}`}
-    >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block cursor-grab active:cursor-grabbing transition-opacity duration-300"
-      />
-
-      {/* Ambient Radial Glass Vignette */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(0,0,0,0.7)_100%)]" />
-
-      {/* Subtle Top & Bottom Shadow Gradients */}
-      <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none bg-gradient-to-b from-black/80 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-      {/* Floating Interactive Badge */}
-      <div className="absolute top-4 left-4 z-10 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
-        <span className="w-2 h-2 rounded-full bg-[var(--emerald-light)] animate-pulse" />
-        <span className="text-[11px] font-mono tracking-wider text-[#f2ede6]/75 uppercase">
-          Interactive 3D Work Reel
-        </span>
+        {/* Bottom Hint */}
+        {!activeTitle && (
+          <div className="absolute bottom-4 right-4 z-10 pointer-events-none text-[10px] font-mono tracking-widest text-[#f2ede6]/40 uppercase">
+            Drag • Scroll • Click
+          </div>
+        )}
       </div>
+    );
+  }
+);
 
-      {/* Active Project Title Pill On Hover */}
-      {activeTitle && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none px-4 py-2 rounded-full bg-[#f2ede6] text-[#0b0705] font-semibold text-xs tracking-wider uppercase shadow-xl animate-fade-in whitespace-nowrap">
-          <span>{activeTitle}</span>
-          <span className="ml-1.5 text-[10px] opacity-60">↗</span>
-        </div>
-      )}
-
-      {/* Bottom Hint */}
-      {!activeTitle && (
-        <div className="absolute bottom-4 right-4 z-10 pointer-events-none text-[10px] font-mono tracking-widest text-[#f2ede6]/40 uppercase">
-          Drag • Scroll • Click
-        </div>
-      )}
-    </div>
-  );
-}
+export default ProjectConveyor;
