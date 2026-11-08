@@ -31,7 +31,7 @@ if (typeof window !== "undefined") {
 export const PIN_SCROLL_HEIGHT = 80; // vh per Services slide during pin
 export const TRANSITION_EASE = "power2.inOut"; // Easing for About -> Services travel
 export const SCRUB = 0.8; // Scrub smoothing (0.6 - 1.0)
-export const MAX_WIDESCREEN_WIDTH = 1360; // Max width in pixels (or 90vw)
+export const MAX_WIDESCREEN_WIDTH = 1520; // Max width in pixels (or 94vw)
 export const TILT_ANGLES = {
   present0: 0.0, // 0.0 = full 3D isometric tilt (About view)
   present1: 1.0, // 1.0 = straight-on widescreen presentation (Services view)
@@ -471,43 +471,32 @@ export default function AboutAndServicesSection() {
       {/* =========================================================================
           SECTION 2: SERVICES STAGE WRAPPER (#services)
           The element that gets PINNED by GSAP ScrollTrigger (ST2)
-          Contains Heading, Subtext, END SLOT, and Slide HUD (sitting above scroller)
+          Contains Heading ("OUR SERVICES"), Colossal Screen-Covering END SLOT, and Slide HUD
          ========================================================================= */}
       <div
         ref={stageWrapperRef}
         id="services"
-        className="relative w-full min-h-screen flex flex-col justify-center py-20 px-4 sm:px-6 border-t border-white/[0.08] bg-black overflow-hidden"
+        className="relative w-full min-h-screen flex flex-col justify-between py-6 sm:py-8 px-2 sm:px-4 border-t border-white/[0.08] bg-black overflow-hidden"
       >
-        {/* Ambient Emerald Glow in Background */}
-        <div className="absolute inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_top,rgba(87,149,126,0.12)_0%,transparent_70%)]" />
-
-        {/* Section Header: Sits above scroller in z-order (relative z-30) */}
-        <div className="relative z-30 text-center max-w-3xl mx-auto mb-6 pointer-events-auto">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--emerald-subtle)] text-[var(--emerald-light)] text-xs font-bold uppercase tracking-[0.2em] mb-3 border border-[var(--emerald-brand)]/25 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5" />
-            Core Verticals & Live Showcase
-          </span>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#f2ede6] tracking-tight">
-            Integrated Solutions Built for Scale
+        {/* Section Header: Minimalist, Colossal "OUR SERVICES" */}
+        <div className="relative z-30 text-center max-w-4xl mx-auto pt-2 pb-1 pointer-events-auto">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#f2ede6] tracking-tight uppercase">
+            Our Services
           </h2>
-          <p className="mt-3 text-zinc-400 text-xs sm:text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
-            Drag, swipe, or scroll to explore our live 3D portfolio across performance media,
-            viral organic architectures, and ultra-fast web engineering.
-          </p>
         </div>
 
-        {/* END SLOT: The target centered widescreen slot (~90vw, max 1360px, ~65-70vh) */}
-        <div className="relative w-full flex items-center justify-center my-3">
+        {/* END SLOT: Colossal Screen-Covering Widescreen Slot */}
+        <div className="relative w-full flex items-center justify-center my-1 flex-1">
           <div
             ref={endSlotRef}
-            className="w-[90vw] max-w-[1360px] h-[58vh] min-h-[460px] max-h-[680px] pointer-events-none"
-            aria-label="Widescreen Services Showcase Slot (End Slot)"
+            className="w-[94vw] max-w-[1520px] h-[82vh] sm:h-[86vh] lg:h-[88vh] min-h-[620px] max-h-[920px] pointer-events-none"
+            aria-label="Screen-Covering Services Showcase Slot (End Slot)"
           />
         </div>
 
-        {/* LIVE SLIDE HUD: Sits above scroller in z-order (relative z-30) */}
+        {/* LIVE SLIDE HUD: Sits cleanly at bottom edge above scroller in z-order (relative z-30) */}
         <div
-          className={`relative z-30 max-w-xl mx-auto mt-4 px-6 py-2.5 rounded-full bg-black/75 border border-white/10 backdrop-blur-md flex items-center justify-between gap-4 transition-all duration-300 pointer-events-auto ${
+          className={`relative z-30 max-w-xl mx-auto mt-2 mb-2 px-6 py-2 rounded-full bg-black/80 border border-white/10 backdrop-blur-md flex items-center justify-between gap-4 transition-all duration-300 pointer-events-auto ${
             hudVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
           }`}
         >
