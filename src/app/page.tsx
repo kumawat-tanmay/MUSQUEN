@@ -37,19 +37,21 @@ export default function Home() {
               Algorithmic media buying and viral social architecture built to dominate markets.
             </p>
 
-            {/* Minimalist Magnetic Apple Pill Buttons */}
+            {/* CTA Buttons: Conic Gradient Glow Button & Glass Outline */}
             <div className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/#contact"
-                className="group inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase bg-[#f2ede6] text-[#0b0705] hover:bg-white hover:shadow-2xl hover:shadow-[#57957E]/30 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                className="gradient-button group"
               >
-                <span>Start Scaling</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <span className="gradient-text tracking-[0.14em] uppercase text-xs sm:text-sm font-bold">
+                  Start Scaling
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-[#4ecdc4] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
 
               <Link
                 href="/#services"
-                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#f2ede6] bg-white/[0.08] border border-white/25 hover:bg-white/20 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm font-bold tracking-[0.14em] uppercase text-[#f2ede6] bg-white/[0.08] border border-white/25 hover:bg-white/20 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.99]"
               >
                 <span>Explore Services</span>
               </Link>
