@@ -712,32 +712,13 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
     return (
       <div
         ref={containerRef}
-        className={`relative w-full h-full rounded-3xl overflow-hidden bg-transparent select-none touch-pan-y group ${className}`}
+        className={`relative w-full h-full bg-transparent select-none touch-pan-y ${className}`}
+        aria-label="3D Work Reel Showcase"
       >
         <canvas
           ref={canvasRef}
           className="w-full h-full block cursor-grab active:cursor-grabbing transition-opacity duration-300"
         />
-
-        {/* Ambient Radial Glass Vignette */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(0,0,0,0.7)_100%)]" />
-
-        {/* Subtle Top & Bottom Shadow Gradients */}
-        <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none bg-gradient-to-b from-black/80 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-        {/* Floating Interactive Badge */}
-        <div className="absolute top-4 left-4 z-10 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
-          <span className="w-2 h-2 rounded-full bg-[var(--emerald-light)] animate-pulse" />
-          <span className="text-[11px] font-mono tracking-wider text-[#f2ede6]/75 uppercase">
-            Interactive 3D Work Reel
-          </span>
-        </div>
-
-        {/* Bottom Hint */}
-        <div className="absolute bottom-4 right-4 z-10 pointer-events-none text-[10px] font-mono tracking-widest text-[#f2ede6]/40 uppercase">
-          Drag • Scroll • Click
-        </div>
       </div>
     );
   }

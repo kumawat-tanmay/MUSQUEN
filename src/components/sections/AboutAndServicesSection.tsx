@@ -457,11 +457,11 @@ export default function AboutAndServicesSection() {
             </div>
           </div>
 
-          {/* Right Column: START SLOT (Empty div placeholder, matching scroller dimensions) */}
+          {/* Right Column: START SLOT (Invisible layout sizing anchor for the scroller) */}
           <div className="lg:col-span-6 flex items-center justify-center relative">
             <div
               ref={startSlotRef}
-              className="w-full h-[480px] sm:h-[580px] lg:h-[640px] rounded-3xl border border-white/[0.06] bg-white/[0.01]"
+              className="w-full h-[480px] sm:h-[580px] lg:h-[640px] pointer-events-none"
               aria-label="3D Work Reel Placeholder (Start Slot)"
             />
           </div>
@@ -500,7 +500,7 @@ export default function AboutAndServicesSection() {
         <div className="relative w-full flex items-center justify-center my-3">
           <div
             ref={endSlotRef}
-            className="w-[90vw] max-w-[1360px] h-[58vh] min-h-[460px] max-h-[680px] rounded-3xl border border-white/[0.04] bg-white/[0.01]"
+            className="w-[90vw] max-w-[1360px] h-[58vh] min-h-[460px] max-h-[680px] pointer-events-none"
             aria-label="Widescreen Services Showcase Slot (End Slot)"
           />
         </div>
