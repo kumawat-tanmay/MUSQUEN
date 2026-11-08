@@ -173,6 +173,11 @@ export default function AboutAndServicesSection() {
         const curScaleX = lerp(1, targetScaleX, easeP);
         const curScaleY = lerp(1, targetScaleY, easeP);
 
+        // When in About, release scroll lock so the scroller drifts continuously
+        if (travelProgressRef.current <= 0.02) {
+          conveyor?.setScrollOffset(null);
+        }
+
         // Phase 4 Exit: After the pin ends, subtract downstream scroll
         if (pinEndScrollRef.current > 0 && currentScrollY > pinEndScrollRef.current) {
           const extraScroll = currentScrollY - pinEndScrollRef.current;
@@ -216,6 +221,11 @@ export default function AboutAndServicesSection() {
           travelProgressRef.current = self.progress;
           updateScrollerTransform();
 
+          // When coming back up into About, release the scroll offset lock so drift continues
+          if (self.progress <= 0.05) {
+            conveyor?.setScrollOffset(null);
+          }
+
           // When close to services, show HUD
           if (self.progress > 0.85) {
             setHudVisible(true);
@@ -244,6 +254,14 @@ export default function AboutAndServicesSection() {
         },
         onUpdate: (self) => {
           pinEndScrollRef.current = self.end;
+
+          // When scrolled above the pinned stage, release offset lock back to continuous drift
+          if (self.progress <= 0) {
+            conveyor?.setScrollOffset(null);
+            setHudVisible(false);
+            updateScrollerTransform();
+            return;
+          }
 
           // Inside the pin, travel progress is 1.0
           travelProgressRef.current = 1.0;

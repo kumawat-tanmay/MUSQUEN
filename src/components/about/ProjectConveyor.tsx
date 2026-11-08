@@ -679,9 +679,9 @@ const ProjectConveyor = forwardRef<ProjectConveyorHandle, ProjectConveyorProps>(
           motion.present +=
             (motion.targetPresent - motion.present) * (reducedMotion ? 1 : 0.15);
         } else {
-          // Subtle baseline momentum when free
-          if (Math.abs(motion.velocity) < 0.001 && !touch) {
-            motion.velocity = 0.004;
+          // Continuous smooth baseline drift when in About / free mode (never stops)
+          if (Math.abs(motion.velocity) < 0.005 && !touch) {
+            motion.velocity = 0.008;
           }
           advanceMotion(motion, frames, reelSlides.length, reducedMotion);
         }
